@@ -3,7 +3,7 @@
 #include <ros/console.h>
 
 
-TopicNameParser::TopicNameParser(const TopicName& topicName) 
+NSParser::NSParser(const TopicName& topicName) 
     : m_topicName(topicName)
 {
     std::size_t segmentBegin = m_topicName.find('/');

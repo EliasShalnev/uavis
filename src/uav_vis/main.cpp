@@ -1,26 +1,15 @@
 #include <ros/init.h>
 
-#include "uav_vis/TopicNameParser.h"
+#include "uav_vis/UavVis.h"
 
 const std::string nodeName = "uav_vis";
 
 int main(int argc, char **argv)
 {
-    // ros::init(argc, argv, nodeName);
-    // ros::NodeHandle nh;
+    ros::init(argc, argv, nodeName);
 
-    TopicNameParser parser("/scout1/uav_com/bomber1/topic");
+    UavVis uavvis(ros::this_node::getNamespace());
 
-    for(auto segment = parser.begin(); segment != parser.end(); ++segment)
-    {
-        ROS_INFO_STREAM(*segment);
-    }
-
-    for(auto segment : parser)
-    {
-        ROS_INFO_STREAM(segment);
-    }
-
-
+    ros::spin();
     return 0;
 }

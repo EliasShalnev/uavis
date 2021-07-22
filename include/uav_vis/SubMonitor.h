@@ -1,6 +1,8 @@
 #pragma once
 
-#include <ros/ros.h>
+#include <ros/node_handle.h>
+#include <ros/this_node.h>
+#include <ros/subscriber.h>
 
 
 template <class MessageType>
@@ -15,6 +17,8 @@ public:
     SubMonitor(const SubMonitor &origin) = delete;
     SubMonitor& operator=(const SubMonitor &origin) = delete;
     virtual ~SubMonitor() = default;
+
+    uint32_t getNumPublishers() const { return m_subscriber.getNumPublishers(); }
 
     /**
      * @brief Get last message that have published in subscribed topic

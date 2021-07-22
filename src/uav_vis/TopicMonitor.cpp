@@ -4,7 +4,7 @@
 
 
 
-TopicMonitor::TopicMonitor(/* args */) 
+TopicMonitor::TopicMonitor() 
     : m_nodeHandle()
     , m_requestTimer(m_nodeHandle.createTimer(ros::Duration(),
                                               &TopicMonitor::timerCallback,

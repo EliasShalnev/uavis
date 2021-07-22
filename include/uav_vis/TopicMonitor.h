@@ -11,13 +11,13 @@
 class TopicMonitor
 {
 public:
-    using RequestCallback =  std::function<void(const XmlRpc::XmlRpcValue&)>;
+    using RequestCallback = std::function<void(const XmlRpc::XmlRpcValue&)>;
 
 public:
     TopicMonitor();
     TopicMonitor(const TopicMonitor&) = delete;
     TopicMonitor& operator=(const TopicMonitor&) = delete;
-    ~TopicMonitor();
+    ~TopicMonitor() = default;
 
 protected:
     virtual void systemStateRequest();
