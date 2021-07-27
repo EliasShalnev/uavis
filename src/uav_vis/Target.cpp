@@ -1,6 +1,5 @@
 #include "uav_vis/Target.h"
 
-const Target::TargetName Target::targetNamePrefix = "sim_p3at";
 
 Target::Target(const TargetName& targetName) 
     : m_targetPoseTopicName('/'+targetName+"/local_position")

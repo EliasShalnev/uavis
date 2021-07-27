@@ -4,6 +4,8 @@
 
 #include "uavis/TargetCoordinates.h"
 
+#include "uav_vis/TecVisionSim.h"
+
 UavVis::UavVis(const BoardName& boardName) 
     : m_boardName(boardName)
     , m_nh(boardName)
@@ -15,6 +17,12 @@ UavVis::UavVis(const BoardName& boardName)
 { }
 
 
+geometry_msgs::PoseStamped::ConstPtr UavVis::getCoordinates() const
+{
+    return m_uavCoordinates.getMessage();
+}
+
+
 void UavVis::frameTimerCallback(const ros::TimerEvent &event) 
 {
     simulateVis();
@@ -23,13 +31,27 @@ void UavVis::frameTimerCallback(const ros::TimerEvent &event)
 
 void UavVis::simulateVis() 
 {
+    if( !isActive() ) { 
+        ROS_WARN_STREAM(m_boardName << " isn't active.");
+        return;
+    }
+    auto uavCoord = getCoordinates();
+
     uavis::TargetCoordinates msg;
     msg.frameNum = ++m_frameNum;
 
+    TecVisionSim tecVisionSim;
+
     for(auto [targetName, target] : m_targets)
     {
+        if( !target->isActive() ) {
+            ROS_WARN_STREAM(targetName << " isn't active.");
+            continue;
+        }
         auto targetCoord = target->getCoordinates();
-
+      
+        if( !tecVisionSim.checkTarget(uavCoord, targetCoord) ) { continue; } //проверка возможности обнаружения ЦО
+        if( !tecVisionSim.generateSecondKindError() ) { continue; } //симуляция ошибки первого рода 
 
         msg.coordinates.emplace_back(*targetCoord);
     }
@@ -62,6 +84,7 @@ void UavVis::removeUnregisteredTargets()
         if( !it->second->isActive() )
         {
             it = m_targets.erase(it);
+            
             ROS_INFO_STREAM("Target \"" << targetName << "\" was removed.");
         }
         else { ++it; }

@@ -22,6 +22,11 @@ public:
     UavVis& operator=(const UavVis&) = delete;
     ~UavVis() = default;
 
+public:
+    geometry_msgs::PoseStamped::ConstPtr getCoordinates() const;
+    bool isActive() { return m_uavCoordinates.getNumPublishers() != 0; }
+
+private:
     void frameTimerCallback(const ros::TimerEvent &event);
 
     void simulateVis();
@@ -34,7 +39,7 @@ private:
     const BoardName m_boardName;
     ros::NodeHandle m_nh;
 
-    ros::Duration m_frameFreq {2};
+    ros::Duration m_frameFreq {3};
     uint32_t m_frameNum {0};
     ros::Publisher m_targetCoordinatesPub;
     ros::Timer m_frameTimer;

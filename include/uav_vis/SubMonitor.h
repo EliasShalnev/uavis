@@ -35,7 +35,7 @@ public:
 protected:
     virtual void callback(const boost::shared_ptr<MessageType const> &message) 
     { 
-        m_currentMessage = message; ros::this_node::getNamespace();
+        m_currentMessage = message;
     }
 
 private:
