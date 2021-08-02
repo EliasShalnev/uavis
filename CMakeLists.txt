@@ -4,6 +4,19 @@ project(uavis)
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++17)
 
+
+set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH ON)
+find_package(PkgConfig REQUIRED)
+if ( NOT (PKGCONFIG_FOUND))
+      message(FATAL_ERROR "Please Install PPkgConfig: CMake will Exit")
+endif()
+pkg_check_modules(GST REQUIRED gstreamer-1.0>=1.8)
+if ( NOT (GST_FOUND))
+      message(FATAL_ERROR "Please Install Gstreamer Dev: CMake will Exit")
+endif()
+set(ENV{PKG_CONFIG_PATH})
+
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -118,6 +131,7 @@ catkin_package(
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
+    ${GST_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -156,6 +170,7 @@ add_dependencies(uav_vis uavis_generate_messages_cpp)
 ## Specify libraries to link a library or executable target against
 target_link_libraries(uav_vis
   ${catkin_LIBRARIES}
+  ${GST_LIBRARIES}
 )
 
 #############

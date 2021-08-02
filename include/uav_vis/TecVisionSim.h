@@ -37,8 +37,8 @@ private:
     inline int getRandom() const ;
 
 private:
-
-    const double minP = 10; //(пикс/мм)
+    //TODO - change this parameter
+    const double minP = 10; //(пикс/мм) 
 
     static constexpr uint8_t firstKindError = 15; //вероятность ошибки первого рода
     static constexpr uint8_t secondKindError = 75; //веростность ошибки второго рода 
