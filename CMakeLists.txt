@@ -152,6 +152,7 @@ add_executable(uav_vis
                 # src/uav_vis/TopicMonitor.cpp
                 src/uav_vis/UavVis.cpp
                 src/uav_vis/Target.cpp
+                src/uav_vis/CameraHandle.cpp
                 src/uav_vis/TecVisionSim.cpp
                 src/uav_vis/main.cpp
               )
