@@ -10,16 +10,20 @@
 
 void initPipeline(Context* context);
 
+/* This function is called when a new sample posted in a pipeline */
 GstFlowReturn newFrame_cb(GstElement* frameSink, Context* context);
 
+/* This function is called when an error message is posted on the bus */
 void error_cb (GstBus* bus, GstMessage* msg, Context* context);
 
+/* This function is called when an eos message is posted on the bus */
 void eos_cb(GstBus* bus, GstMessage* msg, Context* context);
 
 
 CameraHandle::CameraHandle() 
     : m_frameDir( getpwuid( getuid() )->pw_dir + ros::this_node::getNamespace() + "/frames" )
 {
+    ROS_INFO_STREAM("Frame location directory: " << m_frameDir);
     m_context.m_gstreamerThread = std::thread(initPipeline, &m_context);
 
     while(CameraHandle::isGMainLoopRunning() == false)
@@ -36,7 +40,6 @@ CameraHandle::~CameraHandle()
     g_main_loop_quit(m_context.m_gMainLoop);
     while(CameraHandle::isGMainLoopRunning() == true)
     {
-        ROS_INFO_STREAM("Waiting...");
         std::this_thread::sleep_for( std::chrono::milliseconds(300) );
     }
 
@@ -68,7 +71,6 @@ void CameraHandle::saveFrame(uint32_t frameNum)
     std::string location = m_frameDir + '/' + frameName;
 
     auto [frameData, frameSize] = m_context.m_currentFrame;
-    ROS_INFO_STREAM("******* " << frameSize);
     writeOutFile(location, frameData, frameSize);
 }
 
@@ -168,7 +170,6 @@ GstFlowReturn newFrame_cb(GstElement* frameSink, Context* context)
 }
 
 
-/* This function is called when an error message is posted on the bus */
 void error_cb (GstBus* bus, GstMessage* msg, Context* context)
 {
     GError* err;
