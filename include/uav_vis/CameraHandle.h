@@ -1,26 +1,58 @@
 #pragma once
 
-
 #include <gst/gst.h>
 
-#include <condition_variable>
 #include <thread>
+#include <mutex>
 
+struct Context
+{
+    GstElement* m_pipeline = NULL;
+    GMainLoop* m_gMainLoop = NULL;
+    std::pair<char*, size_t> m_currentFrame {NULL, 0};
+    std::thread m_gstreamerThread;
+    std::mutex m_mutex;
+};
 
 class CameraHandle
 {
 public:
-    CameraHandle() = default;
+    CameraHandle();
     ~CameraHandle();
 
-    void saveCapture(guint32 frameNum);
+    bool isGMainLoopRunning();
 
-    void initPipeline();
-
-    bool isGMainLoopRunning(); 
+    void saveFrame(uint32_t frameNum);
 
 private:
-    GMainLoop* m_gMainLoop = NULL;
-    GstElement* m_pipeline = NULL;
-    std::mutex m_mutex;
+    bool writeOutFile(const std::string& outfile, char* buf, const size_t& len);
+
+private:
+    Context m_context;
+
+    const std::string m_frameDir;
 };
+
+// class CameraHandle
+// {
+// public:
+//     CameraHandle();
+//     ~CameraHandle();
+
+//     void saveFrame(uint32_t frameNum);
+
+//     void initPipeline();
+
+//     bool isGMainLoopRunning(); 
+
+// private:
+//     GstFlowReturn newFrameCallback(GstElement *frameSink);
+
+//     bool writeOutFile(const std::string& outfile, char* buf, const size_t& len);
+
+// private:
+//     GMainLoop* m_gMainLoop = NULL;
+//     GstElement* m_pipeline = NULL;
+//     std::string m_frameDir;
+    
+// };

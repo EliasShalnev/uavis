@@ -10,12 +10,19 @@
 UavVis::UavVis(const BoardName& boardName) 
     : m_boardName(boardName)
     , m_nh(boardName)
-    , m_targetCoordinatesPub( m_nh.advertise<uavis::TargetCoordinates>("target_coordinates", 10) )
     , m_frameTimer( m_nh.createTimer(m_frameFreq, &UavVis::frameTimerCallback, this) )
+    , m_targetCoordinatesPub( m_nh.advertise<uavis::TargetCoordinates>("target_coordinates", 10) )
     , m_uavCoordinates(m_nh, "mavros/local_position/pose", 10)
     , m_modelStatesSub( m_nh.subscribe<gazebo_msgs::ModelStates>
                         ("/gazebo/model_states", 10, &UavVis::checkRegisteredTargets, this) )
-{ }
+{ 
+    // m_cameraThread = std::thread(&CameraHandle::initPipeline, &m_cameraHandle);
+    m_cameraThread.detach();
+
+    // while(m_cameraHandle.isGMainLoopRunning() == false) { 
+    //   std::this_thread::sleep_for( std::chrono::seconds(1) ); 
+    // }
+}
 
 
 geometry_msgs::PoseStamped::ConstPtr UavVis::getCoordinates() const

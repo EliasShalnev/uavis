@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <thread>
 
 #include <ros/node_handle.h>
 
@@ -10,6 +11,7 @@
 
 #include "uav_vis/SubMonitor.h"
 #include "uav_vis/Target.h"
+#include "uav_vis/CameraHandle.h"
 
 class UavVis
 {
@@ -39,10 +41,13 @@ private:
     const BoardName m_boardName;
     ros::NodeHandle m_nh;
 
+    // CameraHandle m_cameraHandle;
+    std::thread m_cameraThread;
+
     ros::Duration m_frameFreq {3};
     uint32_t m_frameNum {0};
-    ros::Publisher m_targetCoordinatesPub;
     ros::Timer m_frameTimer;
+    ros::Publisher m_targetCoordinatesPub;
     
     SubMonitor<geometry_msgs::PoseStamped> m_uavCoordinates;
 

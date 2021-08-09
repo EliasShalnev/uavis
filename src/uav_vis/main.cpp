@@ -4,6 +4,7 @@
 
 #include "uav_vis/UavVis.h"
 #include "uav_vis/CameraHandle.h"
+#include <gtk/gtk.h>
 
 
 //"udpsrc port=5600 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264 ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink fps-update-interval=1000 sync=false"
@@ -12,55 +13,91 @@
 
 const std::string nodeName = "uav_vis";
 
+// Writes image buffer into outfile
+// void WriteOutFile(char* outfile, char* buf, int len)
+// {
+// 	FILE* of = fopen(outfile, "wb");
+// 	if(of == NULL)
+// 	{
+// 		fprintf(stderr, "File %s could not be created\n", outfile);
+// 	}
+// 	else
+// 	{
+// 		if(fwrite(buf, 1, len, of) != len)
+// 		{
+// 			fprintf(stderr, "Could not write to file %s\n", outfile);
+// 		}
+// 		fclose(of);
+// 	}
+// }
+
 // GstFlowReturn new_frame(GstElement *frameSink, gpointer user_data)
 // {
-//   GstSample* sample;
-  
+//   GstSample* sample = NULL;
+
 //   /* Retrieve the buffer */
 //   g_signal_emit_by_name (frameSink, "pull-sample", &sample);
 //   if (!sample) { return GST_FLOW_ERROR; }
 
-
-//   GstCaps* caps = gst_sample_get_caps (sample);
-//   if (!caps) {
-//     g_print ("could not get snapshot format\n");
-//     exit (-1);
-//   }
-//   GstStructure* structure = gst_caps_get_structure(caps, 0);
-
-//   /* we need to get the final caps on the buffer to get the size */
-//   gint width, height;
-//   gboolean res = gst_structure_get_int (structure, "width", &width);
-//   res |= gst_structure_get_int (structure, "height", &height);
-//   if (!res) {
-//     g_print ("could not get snapshot dimension\n");
-//     exit (-1);
-//   }
-
-
+//   ROS_INFO_STREAM("New sample");
 //   GstBuffer* frameBuffer = gst_sample_get_buffer(sample);
 //   GstMapInfo map;
-//   if ( gst_buffer_map (frameBuffer, &map, GST_MAP_READ) ) 
-//   {
-//     auto pixbuf = gdk_pixbuf_new_from_data (map.data,
-//            GDK_COLORSPACE_RGB, FALSE, 8, width, height,
-//            GST_ROUND_UP_4 (width * 3), NULL, NULL);
-//     GError *error = NULL;
-//     /* save the pixbuf */
-//     gdk_pixbuf_save (pixbuf, "/home/def/tmp/gstreamer-test/snapshot.png", "png", &error, NULL);
-//     if (error != NULL)
-//     {
-//       g_print ("Error: %s\n", error->message);
-//       g_error_free (error);
-//     }
+//   gst_buffer_map (frameBuffer, &map, GST_MAP_READ);
 
-//     // g_print("%i\n", map.size);
-//   }
+//   char* pRet = new char[map.size];
+//   // Copy image
+//   memmove(pRet, map.data, map.size);
+//   WriteOutFile("/home/elias/tmp/gstreamer_test/snapshot.jpeg", pRet, map.size);
+
+//   delete[] pRet;
 
 
-//   gst_sample_unref (sample);
+//   gst_buffer_unmap (frameBuffer, &map);
+//   gst_sample_unref(sample);
 
 //   return GST_FLOW_OK;
+
+
+//   // GstCaps* caps = gst_sample_get_caps (sample);
+//   // if (!caps) {
+//   //   g_print ("could not get snapshot format\n");
+//   //   exit (-1);
+//   // }
+//   // GstStructure* structure = gst_caps_get_structure(caps, 0);
+
+//   // /* we need to get the final caps on the buffer to get the size */
+//   // gint width, height;
+//   // gboolean res = gst_structure_get_int (structure, "width", &width);
+//   // res |= gst_structure_get_int (structure, "height", &height);
+//   // if (!res) {
+//   //   g_print ("could not get snapshot dimension\n");
+//   //   exit (-1);
+//   // }
+
+
+//   // GstBuffer* frameBuffer = gst_sample_get_buffer(sample);
+//   // GstMapInfo map;
+//   // if ( gst_buffer_map (frameBuffer, &map, GST_MAP_READ) ) 
+//   // {
+//   //   auto pixbuf = gdk_pixbuf_new_from_data (map.data,
+//   //          GDK_COLORSPACE_RGB, FALSE, 8, width, height,
+//   //          GST_ROUND_UP_4 (width * 3), NULL, NULL);
+//   //   GError *error = NULL;
+//   //   /* save the pixbuf */
+//   //   gdk_pixbuf_save (pixbuf, "/home/elias/tmp/gstreamer_test/snapshot.png", "png", &error, NULL);
+//   //   if (error != NULL)
+//   //   {
+//   //     g_print ("Error: %s\n", error->message);
+//   //     g_error_free (error);
+//   //   }
+
+//   //   // g_print("%i\n", map.size);
+//   // }
+
+
+//   // gst_sample_unref (sample);
+
+//   // return GST_FLOW_OK;
 // }
 
 // /* This function is called when an error message is posted on the bus */
@@ -82,32 +119,25 @@ const std::string nodeName = "uav_vis";
 //   /* Initialize GStreamer */
 //   gst_init (&argc, &argv);
 
-//   gchar* desrc = g_strdup_printf (
+//   gchar* pipelineDescription = g_strdup_printf (
 //     "udpsrc port=5600 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264"  
-//     "! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=frame_sink"
+//     "! rtph264depay ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=frame_sink"
 //   );
 
 //   GError* error = NULL;
-//   GstElement* pipeline = gst_parse_launch(desrc, &error);
+//   GstElement* pipeline = gst_parse_launch(pipelineDescription, &error);
 
 //   if (error != NULL)
 //   {
 //     g_print ("could not construct pipeline: %s\n", error->message);
 //     g_error_free (error);
+//     g_free(pipelineDescription);
 //     return -1;
 //   }
+//   g_free(pipelineDescription);
 
 //   /* get sink */
 //   GstElement* frameSink = gst_bin_get_by_name(GST_BIN(pipeline), "frame_sink");
-
-//   /* set to PAUSED to make the first frame arrive in the sink */
-//   GstStateChangeReturn ret = gst_element_set_state (pipeline, GST_STATE_PAUSED);
-//   if(ret == GST_STATE_CHANGE_FAILURE)
-//   {
-//     g_printerr ("Unable to set the pipeline to the playing state.\n");
-//     gst_object_unref (pipeline);
-//     return -1;
-//   }
 
 //   g_object_set(frameSink, "emit-signals", TRUE, NULL);
 //   g_signal_connect (frameSink, "new-sample", G_CALLBACK (new_frame), NULL);
@@ -117,7 +147,7 @@ const std::string nodeName = "uav_vis";
 //   GstBus* bus = gst_element_get_bus( pipeline );
 //   gst_bus_add_signal_watch(bus);
 //   g_signal_connect (G_OBJECT (bus), "message::error", (GCallback)error_cb, NULL);
-//   g_signal_connect (G_OBJECT (bus), "message::eos", (GCallback)error_cb, NULL);
+//   // g_signal_connect (G_OBJECT (bus), "message::eos", (GCallback)error_cb, NULL);
 //   gst_object_unref(bus);
 
 //   /* Start playing the pipeline */
@@ -132,18 +162,18 @@ const std::string nodeName = "uav_vis";
 
 
 // /* This function is called when an error message is posted on the bus */
-static void error_cb (GstBus *bus, GstMessage *msg)
-{
-  GError* err;
-  gchar* debug_info;
+// static void error_cb (GstBus *bus, GstMessage *msg)
+// {
+//   GError* err;
+//   gchar* debug_info;
 
-  /* Print error details on the screen */
-  gst_message_parse_error (msg, &err, &debug_info);
-  g_printerr ("Error received from element %s: %s\n", GST_OBJECT_NAME (msg->src), err->message);
-  g_printerr ("Debugging information: %s\n", debug_info ? debug_info : "none");
-  g_clear_error (&err);
-  g_free (debug_info);
-}
+//   /* Print error details on the screen */
+//   gst_message_parse_error (msg, &err, &debug_info);
+//   g_printerr ("Error received from element %s: %s\n", GST_OBJECT_NAME (msg->src), err->message);
+//   g_printerr ("Debugging information: %s\n", debug_info ? debug_info : "none");
+//   g_clear_error (&err);
+//   g_free (debug_info);
+// }
 
 int main(int argc, char **argv)
 {
@@ -187,26 +217,21 @@ int main(int argc, char **argv)
   // gst_object_unref (pipeline);
   // return 0;
 
+    ros::init(argc, argv, nodeName);
     
     CameraHandle cameraHandle;
-    std::thread gstreamerThread(&CameraHandle::initPipeline, &cameraHandle);
-    gstreamerThread.detach();
-
-    while(cameraHandle.isGMainLoopRunning() == false) { 
-      std::this_thread::sleep_for( std::chrono::seconds(1) ); 
-    }
   
     if( cameraHandle.isGMainLoopRunning() ) { ROS_INFO_STREAM("GMainLoop is running"); }
     else { ROS_ERROR_STREAM("GMainLoop is not running"); }
 
+
     for(int i=0; i<100; ++i)
     {
-      cameraHandle.saveCapture(i);
+      cameraHandle.saveFrame(i);
       std::this_thread::sleep_for( std::chrono::milliseconds(100) );
     }
-    // cameraHandle.saveCapture(2);
     /******************************/
-    ros::init(argc, argv, nodeName);
+    // ros::init(argc, argv, nodeName);
 
     // UavVis uavvis(ros::this_node::getNamespace());
 
