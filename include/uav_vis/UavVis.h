@@ -2,7 +2,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <thread>
 
 #include <ros/node_handle.h>
 
@@ -41,8 +40,7 @@ private:
     const BoardName m_boardName;
     ros::NodeHandle m_nh;
 
-    // CameraHandle m_cameraHandle;
-    std::thread m_cameraThread;
+    CameraHandle m_cameraHandle;
 
     ros::Duration m_frameFreq {3};
     uint32_t m_frameNum {0};

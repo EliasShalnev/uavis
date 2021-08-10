@@ -31,9 +31,12 @@ public:
     bool generateSecondKindError() const;
 
 private:
-    inline bool isTargetInCam(const UavCoordinates& uavCoord, const TargetCoordinates& targetCoord) const;
-    inline double evalDistance(const UavCoordinates& uavCoord, const TargetCoordinates& targetCoord) const; //дистанция между БпЛА и ЦО (мм)
-    inline double evalP(const UavCoordinates& uavCoord, const TargetCoordinates& targetCoord) const; //размер уменьшенного изображения в пикселях
+    inline bool isTargetInCam(const UavCoordinates& uavCoord, 
+                              const TargetCoordinates& targetCoord) const;
+    inline double evalDistance(const UavCoordinates& uavCoord, 
+                               const TargetCoordinates& targetCoord) const; //дистанция между БпЛА и ЦО (мм)
+    inline double evalP(const UavCoordinates& uavCoord, 
+                        const TargetCoordinates& targetCoord) const; //размер уменьшенного изображения в пикселях
     inline int getRandom() const ;
 
 private:

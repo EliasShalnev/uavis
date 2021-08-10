@@ -14,10 +14,6 @@ pkg_check_modules(GST REQUIRED gstreamer-1.0>=1.8)
 if ( NOT (GST_FOUND))
   message(FATAL_ERROR "Please Install Gstreamer Dev: CMake will Exit")
 endif()
-pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
-if( NOT (GTK_FOUND))
-  message(FATAL_ERROR "Please Install GTK Dev: CMake will Exit")
-endif()
 set(ENV{PKG_CONFIG_PATH})
 
 
@@ -136,7 +132,6 @@ include_directories(
     include
     ${catkin_INCLUDE_DIRS}
     ${GST_INCLUDE_DIRS}
-    ${GTK2_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -177,7 +172,6 @@ add_dependencies(uav_vis uavis_generate_messages_cpp)
 target_link_libraries(uav_vis
   ${catkin_LIBRARIES}
   ${GST_LIBRARIES}
-  ${GTK2_LIBRARIES}
 )
 
 # target_link_libraries(uav_vis PRIVATE ${GTKMM_LIBRARIES})

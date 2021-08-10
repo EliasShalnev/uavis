@@ -72,7 +72,7 @@ inline int TecVisionSim::getRandom() const
 {
     std::random_device rd;
     std::mt19937 gen( rd() );
-    std::uniform_int_distribution distrib(0, 100);
+    std::uniform_int_distribution distrib(1, 100);
 
     return distrib(gen);
 }

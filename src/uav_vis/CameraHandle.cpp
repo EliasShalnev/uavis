@@ -1,10 +1,9 @@
 #include "uav_vis/CameraHandle.h"
 
-#include <unistd.h>
+#include <sys/unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
 
-#include <ros/io.h>
 #include <ros/this_node.h>
 
 
@@ -21,13 +20,14 @@ void eos_cb(GstBus* bus, GstMessage* msg, Context* context);
 
 
 CameraHandle::CameraHandle() 
-    : m_frameDir( getpwuid( getuid() )->pw_dir + ros::this_node::getNamespace() + "/frames" )
+    : m_frameDir( std::string(getpwuid( getuid() )->pw_dir ) + "/frames" + ros::this_node::getNamespace() )
 {
+    //TODO - create frame directory
     ROS_INFO_STREAM("Frame location directory: " << m_frameDir);
     m_context.m_gstreamerThread = std::thread(initPipeline, &m_context);
 
     while(CameraHandle::isGMainLoopRunning() == false)
-    { 
+    {
         std::this_thread::sleep_for( std::chrono::seconds(1) );
     }
     m_context.m_gstreamerThread.detach();
@@ -192,143 +192,3 @@ void eos_cb(GstBus* bus, GstMessage* msg, Context* context)
     g_main_loop_quit(context->m_gMainLoop);
 }
 
-
-
-
-// bool isGMainLoopRunning() 
-// {
-    // std::lock_guard<std::mutex> lk(context->m_mutex);
-    // if(context->m_gMainLoop == NULL) { return false; }
-    // return g_main_loop_is_running(context->m_gMainLoop);
-// }
-
-
-
-
-// GstFlowReturn newFrameCallback(GstElement *frameSink, Context* context);
-
-// CameraHandle::CameraHandle() 
-//     : m_frameDir( getpwuid( getuid() )->pw_dir + ros::this_node::getNamespace() + "/frames"  )
-// { 
-//     ROS_INFO_STREAM("Frame directory: " << m_frameDir);
-// }
-
-
-
-
-// void CameraHandle::saveFrame(guint32 frameNum) 
-// {
-//     std::lock_guard<std::mutex> lk(m_mutex);
-
-//     /* set location property */
-//     std::string frameName("frame" + std::to_string(frameNum) + ".jpeg");
-//     std::string location = m_frameDir + '/' + frameName;
-
-//     auto [frameData, frameSize] = m_CurrentFrame;
-//     writeOutFile(location, frameData, frameSize);
-// }
-
-
-// void CameraHandle::initPipeline() 
-// {
-//     /* Initialize GStreamer */
-//     gst_init (NULL, NULL);
-
-//     /* Pipeline launch */
-//     gchar* pipelineDescription = g_strdup_printf (
-//         "udpsrc port=5600 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264"  
-//         "! rtph264depay ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=frame_sink"
-//     );
-    
-//     GError* error = NULL;
-//     m_pipeline = gst_parse_launch(pipelineDescription, &error);
-//     if (error != NULL)
-//     {
-//         ROS_ERROR_STREAM("could not construct pipeline: " << error->message);
-//         g_error_free(error);
-//         g_free(pipelineDescription);
-//         return;
-//     }
-//     g_free(pipelineDescription);
-
-//     /* get sink */
-//     GstElement* frameSink = gst_bin_get_by_name(GST_BIN(m_pipeline), "frame_sink");
-
-//     g_object_set(frameSink, "emit-signals", TRUE, NULL);
-//     //TODO - may not correctly working 
-//     g_signal_connect (frameSink, "new-sample", G_CALLBACK (&CameraHandle::newFrameCallback), NULL);
-
-//     /* Instruct the bus to emit signals for each received message, and connect to the interesting signals */
-//     // GstBus* bus = gst_element_get_bus( pipeline );
-//     // gst_bus_add_signal_watch(bus);
-//     // g_signal_connect (G_OBJECT (bus), "message::error", (GCallback)error_cb, NULL);
-//     // // g_signal_connect (G_OBJECT (bus), "message::eos", (GCallback)error_cb, NULL);
-//     // gst_object_unref(bus);
-
-
-//     /* Start playing pipeline */
-//     GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
-
-//     /* Wait for state change */
-//     ret = gst_element_get_state(m_pipeline, NULL, NULL, -1);
-//     if(ret != GST_STATE_CHANGE_SUCCESS)
-//     {
-//         ROS_ERROR_STREAM("Unable to set the pipeline to the playing state.\n");
-//         return;
-//     }
-
-//     m_gMainLoop = g_main_loop_new (NULL, FALSE);
-//     g_main_loop_run(m_gMainLoop);
-// }
-
-
-// bool CameraHandle::isGMainLoopRunning() 
-// {
-//     std::lock_guard<std::mutex> lk(m_mutex);
-//     if(m_gMainLoop == NULL) { return false; }
-//     return g_main_loop_is_running(m_gMainLoop);
-// }
-
-
-// GstFlowReturn CameraHandle::newFrameCallback(GstElement *frameSink) 
-// {
-//     GstSample* sample = NULL;
-
-//     /* Retrieve the buffer */
-//     g_signal_emit_by_name (frameSink, "pull-sample", &sample);
-//     if (!sample) { return GST_FLOW_ERROR; }
-
-//     ROS_INFO_STREAM("New sample");
-//     GstBuffer* frameBuffer = gst_sample_get_buffer(sample);
-//     GstMapInfo map;
-//     gst_buffer_map (frameBuffer, &map, GST_MAP_READ);
-
-//     auto [frameData, frameSize] = m_CurrentFrame;
-//     if(frameData != NULL) { delete[] frameData; }
-
-//     frameData = new char[map.size];
-//     // Copy image
-//     memmove(frameData, map.data, map.size);
-//     frameSize = map.size;
-//     // writeOutFile("/home/elias/tmp/gstreamer_test/snapshot.jpeg", pRet, map.size);
-
-//     gst_buffer_unmap (frameBuffer, &map);
-//     gst_sample_unref(sample);
-
-//     return GST_FLOW_OK;
-// }
-
-
-// bool CameraHandle::writeOutFile(const std::string& outfile, char* buf, const size_t& len) 
-// {
-//     FILE* outputFile = fopen(outfile.c_str(), "wb");
-// 	if(outputFile == NULL) {
-// 		ROS_ERROR_STREAM("File could not be created: " << outfile);
-//         return false;
-// 	}
-// 	if(fwrite(buf, 1, len, outputFile) != len) { 
-//         ROS_ERROR_STREAM("Could not write to file: " << outfile);
-//     }
-
-//     fclose(outputFile);
-// }

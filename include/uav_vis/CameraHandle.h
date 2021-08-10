@@ -32,27 +32,3 @@ private:
 
     const std::string m_frameDir;
 };
-
-// class CameraHandle
-// {
-// public:
-//     CameraHandle();
-//     ~CameraHandle();
-
-//     void saveFrame(uint32_t frameNum);
-
-//     void initPipeline();
-
-//     bool isGMainLoopRunning(); 
-
-// private:
-//     GstFlowReturn newFrameCallback(GstElement *frameSink);
-
-//     bool writeOutFile(const std::string& outfile, char* buf, const size_t& len);
-
-// private:
-//     GMainLoop* m_gMainLoop = NULL;
-//     GstElement* m_pipeline = NULL;
-//     std::string m_frameDir;
-    
-// };

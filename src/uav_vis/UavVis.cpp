@@ -15,14 +15,7 @@ UavVis::UavVis(const BoardName& boardName)
     , m_uavCoordinates(m_nh, "mavros/local_position/pose", 10)
     , m_modelStatesSub( m_nh.subscribe<gazebo_msgs::ModelStates>
                         ("/gazebo/model_states", 10, &UavVis::checkRegisteredTargets, this) )
-{ 
-    // m_cameraThread = std::thread(&CameraHandle::initPipeline, &m_cameraHandle);
-    m_cameraThread.detach();
-
-    // while(m_cameraHandle.isGMainLoopRunning() == false) { 
-    //   std::this_thread::sleep_for( std::chrono::seconds(1) ); 
-    // }
-}
+{ }
 
 
 geometry_msgs::PoseStamped::ConstPtr UavVis::getCoordinates() const
@@ -61,8 +54,10 @@ void UavVis::simulateVis()
         if( !tecVisionSim.checkTarget(uavCoord, targetCoord) ) { continue; } //проверка возможности обнаружения ЦО
         if( !tecVisionSim.generateSecondKindError() ) { continue; } //симуляция ошибки первого рода 
 
+
         msg.coordinates.emplace_back(*targetCoord);
     }
+    m_cameraHandle.saveFrame(msg.frameNum); //сохранение кадра в каталоге
 
     m_targetCoordinatesPub.publish(msg);
 }
