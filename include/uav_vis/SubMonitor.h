@@ -10,8 +10,8 @@ class SubMonitor
 {
 public:
     SubMonitor(ros::NodeHandle nodeHandle, const std::string &topic, uint32_t queue_size)
-        : m_subscriber(nodeHandle.subscribe<MessageType>
-                       (topic, queue_size, &SubMonitor::callback, this) )
+        : m_subscriber( nodeHandle.subscribe<MessageType>
+                        (topic, queue_size, &SubMonitor::callback, this) )
         , m_currentMessage(new const MessageType)
     { }
     SubMonitor(const SubMonitor &origin) = delete;

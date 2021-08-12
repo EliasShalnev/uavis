@@ -36,12 +36,14 @@ void UavVis::simulateVis()
         ROS_WARN_STREAM(m_boardName << " isn't active.");
         return;
     }
-    auto uavCoord = getCoordinates();
+    
+    removeUnregisteredTargets();
 
     uavis::TargetCoordinates msg;
     msg.frameNum = ++m_frameNum;
 
     TecVisionSim tecVisionSim;
+    auto uavCoord = getCoordinates();
 
     for(auto [targetName, target] : m_targets)
     {
@@ -54,10 +56,9 @@ void UavVis::simulateVis()
         if( !tecVisionSim.checkTarget(uavCoord, targetCoord) ) { continue; } //проверка возможности обнаружения ЦО
         if( !tecVisionSim.generateSecondKindError() ) { continue; } //симуляция ошибки первого рода 
 
-
         msg.coordinates.emplace_back(*targetCoord);
     }
-    m_cameraHandle.saveFrame(msg.frameNum); //сохранение кадра в каталоге
+    // m_cameraHandle.saveFrame(msg.frameNum); //сохранение кадра в каталоге
 
     m_targetCoordinatesPub.publish(msg);
 }
@@ -65,7 +66,7 @@ void UavVis::simulateVis()
 
 void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr &modelStates) 
 {
-    removeUnregisteredTargets();
+
 
     for(auto model : modelStates->name)
     {

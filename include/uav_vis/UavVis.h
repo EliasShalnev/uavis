@@ -12,6 +12,7 @@
 #include "uav_vis/Target.h"
 #include "uav_vis/CameraHandle.h"
 
+
 class UavVis
 {
 public:
@@ -32,15 +33,24 @@ private:
 
     void simulateVis();
 
+    /**
+     * @brief checks if new target model is spawned and saves it in a targets store.
+     * 
+     * @param modelStates 
+     */
     void checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr &modelStates);
 
+    /**
+    * @brief checks if targets is active. Unactive targets will be removed from 
+    *        targets store.  
+    */
     void removeUnregisteredTargets();
 
 private:
     const BoardName m_boardName;
     ros::NodeHandle m_nh;
 
-    CameraHandle m_cameraHandle;
+    // CameraHandle m_cameraHandle;
 
     ros::Duration m_frameFreq {3};
     uint32_t m_frameNum {0};

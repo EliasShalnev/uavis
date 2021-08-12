@@ -1,6 +1,4 @@
 <launch>
-
-    <node name="uav_vis" pkg="uavis" type="uav_vis" output="screen" ns="scout1"/>
-    <!-- <node name="uav_vis" pkg="uavis" type="uav_vis" ns="scout2"/> -->
-	
+    <arg name="port" default="5600"/>
+    <node name="uav_vis" pkg="uavis" type="uav_vis" output="screen" ns="scout1" args="${arg port}"/>
 </launch>

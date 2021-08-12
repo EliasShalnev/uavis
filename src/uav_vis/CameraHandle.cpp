@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <pwd.h>
 
+#include <ros/node_handle.h>
 #include <ros/this_node.h>
 
 
@@ -23,13 +24,14 @@ CameraHandle::CameraHandle()
     : m_frameDir( std::string(getpwuid( getuid() )->pw_dir ) + "/frames" + ros::this_node::getNamespace() )
 {
     //TODO - create frame directory
-    ROS_INFO_STREAM("Frame location directory: " << m_frameDir);
+
     m_context.m_gstreamerThread = std::thread(initPipeline, &m_context);
 
     while(CameraHandle::isGMainLoopRunning() == false)
     {
         std::this_thread::sleep_for( std::chrono::seconds(1) );
     }
+    ROS_INFO_STREAM("Frame location directory: " << m_frameDir);
     m_context.m_gstreamerThread.detach();
 }
 
@@ -94,12 +96,17 @@ void initPipeline(Context* context)
     /* Initialize GStreamer */
     gst_init (NULL, NULL);
 
+    ros::NodeHandle nh("~");
+    int port=0;
+    nh.getParam("port", port);
+
     /* Pipeline launch */
     gchar* pipelineDescription = g_strdup_printf (
-        "udpsrc port=5600 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264"  
+        "udpsrc port=%i ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264"  
         "! rtph264depay ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=frame_sink"
-    );
+    , port);
     
+    ROS_INFO_STREAM(pipelineDescription);
     GError* error = NULL;
     context->m_pipeline = gst_parse_launch(pipelineDescription, &error);
     if (error != NULL)
@@ -191,4 +198,3 @@ void eos_cb(GstBus* bus, GstMessage* msg, Context* context)
     ROS_WARN_STREAM("End of stream message is received.");
     g_main_loop_quit(context->m_gMainLoop);
 }
-
