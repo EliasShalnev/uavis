@@ -23,7 +23,7 @@ class TecVisionSim
     using TargetCoordinates = geometry_msgs::Point::ConstPtr;
 
 public:
-    TecVisionSim() = default;
+    TecVisionSim();
     ~TecVisionSim() = default;
 
     bool checkTarget(const UavCoordinates& uavCoord, const TargetCoordinates& targetCoord) const;
@@ -43,6 +43,6 @@ private:
     //TODO - change this parameter
     const double minP = 10; //(пикс/мм) 
 
-    static constexpr uint8_t firstKindError = 15; //вероятность ошибки первого рода
-    static constexpr uint8_t secondKindError = 75; //веростность ошибки второго рода 
+    const uint8_t m_firstKindError; //вероятность ошибки первого рода
+    const uint8_t m_secondKindError; //веростность ошибки второго рода 
 };

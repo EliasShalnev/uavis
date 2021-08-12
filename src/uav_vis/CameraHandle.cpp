@@ -8,6 +8,8 @@
 #include <ros/node_handle.h>
 #include <ros/this_node.h>
 
+#include "uav_vis/Parameters.h"
+
 
 void initPipeline(Context* context);
 
@@ -21,7 +23,7 @@ void error_cb (GstBus* bus, GstMessage* msg, Context* context);
 void eos_cb(GstBus* bus, GstMessage* msg, Context* context);
 
 
-CameraHandle::CameraHandle(const uint16_t port) 
+CameraHandle::CameraHandle()
     :  m_frameDir( std::string(getpwuid( getuid() )->pw_dir ) + "/frames" + ros::this_node::getNamespace() )
 {
     const int dir_err = mkdir(m_frameDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -32,8 +34,7 @@ CameraHandle::CameraHandle(const uint16_t port)
     }
     ROS_INFO_STREAM("Frame location directory: " << m_frameDir);
 
-    ROS_INFO_STREAM("Camera port=" << port);
-    m_context.m_cameraPort = port;
+    m_context.m_cameraPort = Parameters::getInstance()->getCameraPort();
     m_context.m_gstreamerThread = std::thread(initPipeline, &m_context);
     m_context.m_gstreamerThread.detach();
 

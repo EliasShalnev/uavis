@@ -2,11 +2,18 @@
 
 #include <random>
 
+#include "uav_vis/Parameters.h"
+
+
+TecVisionSim::TecVisionSim() 
+    : m_firstKindError( Parameters::getInstance()->getFirstKindError() )
+    , m_secondKindError( Parameters::getInstance()->getSecondKindError() )
+{ }
+
 
 bool TecVisionSim::checkTarget(const UavCoordinates& uavCoord, 
                                const TargetCoordinates& targetCoord) const
 {
-    // ROS_INFO_STREAM(evalP(uavCoord, targetCoord) << " " << minP);
     return evalP(uavCoord, targetCoord) >= minP && isTargetInCam(uavCoord, targetCoord);
 }
 
@@ -15,7 +22,7 @@ bool TecVisionSim::generateFirstKindError() const
 {
     auto randomVal = getRandom();
     ROS_INFO_STREAM(randomVal);
-    if(randomVal <= firstKindError) { return true; }
+    if(randomVal <= m_firstKindError) { return true; }
     else { return false; }
 }
 
@@ -23,7 +30,7 @@ bool TecVisionSim::generateFirstKindError() const
 bool TecVisionSim::generateSecondKindError() const
 {
     auto randomVal = getRandom();
-    if(randomVal <= secondKindError) { return true; }
+    if(randomVal <= m_secondKindError) { return true; }
     else { return false; }
 }
 

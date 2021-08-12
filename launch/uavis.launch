@@ -1,4 +1,10 @@
 <launch>
     <arg name="port" default="5600"/>
-    <node name="uav_vis" pkg="uavis" type="uav_vis" output="screen" args="-p $(arg port)"/>
+    <arg name="frameProcessingTime" default="3"/>
+    <arg name="firstKindError" default="15"/>
+    <arg name="secondKindError" default="75"/>
+    
+    <node name="uav_vis" pkg="uavis" type="uav_vis" output="screen" args="--port $(arg port)
+        --frame-proc-time $(arg frameProcessingTime) --first-kind-error $(arg firstKindError)
+        --second-kind-error $(arg secondKindError)"/>
 </launch>

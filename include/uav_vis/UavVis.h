@@ -19,7 +19,7 @@ public:
     using BoardName = std::string;
 
 public:
-    UavVis(const BoardName& boardName, const uint16_t cameraPort);
+    UavVis(const BoardName& boardName);
     UavVis(const UavVis&) = delete;
     UavVis& operator=(const UavVis&) = delete;
     ~UavVis() = default;
@@ -52,7 +52,7 @@ private:
 
     CameraHandle m_cameraHandle;
 
-    ros::Duration m_frameFreq {3};
+    ros::Duration m_frameFreq;
     uint32_t m_frameNum {0};
     ros::Timer m_frameTimer;
     ros::Publisher m_targetCoordinatesPub;

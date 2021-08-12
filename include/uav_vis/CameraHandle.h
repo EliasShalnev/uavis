@@ -7,7 +7,6 @@
 
 struct Context
 {
-    
     GstElement* m_pipeline = NULL;
     GMainLoop* m_gMainLoop = NULL;
     std::pair<char*, size_t> m_currentFrame {NULL, 0};
@@ -19,7 +18,7 @@ struct Context
 class CameraHandle
 {
 public:
-    CameraHandle(const uint16_t port);
+    CameraHandle();
     CameraHandle(const CameraHandle&) = delete;
     CameraHandle& operator=(const CameraHandle&) = delete;
     ~CameraHandle();
@@ -34,6 +33,5 @@ private:
 private:
     Context m_context;
 
-   
     const std::string m_frameDir;
 };

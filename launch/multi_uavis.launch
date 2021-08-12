@@ -1,17 +1,17 @@
 <launch>
-    <group ns="scout1">
+    <group ns="scout0">
         <include file="$(find uavis)/launch/uavis.launch">
             <arg name="port" value="5600"/>
         </include>
     </group>
 
-    <group ns="scout2">
+    <group ns="scout1">
         <include file="$(find uavis)/launch/uavis.launch">
             <arg name="port" value="5601"/>
         </include>
     </group>
 
-    <group ns="scout3">
+    <group ns="scout2">
         <include file="$(find uavis)/launch/uavis.launch">
             <arg name="port" value="5602"/>
         </include>

@@ -2,15 +2,17 @@
 
 #include <ros/master.h>
 
-
 #include "uavis/TargetCoordinates.h"
 
 #include "uav_vis/TecVisionSim.h"
+#include "uav_vis/Parameters.h"
 
-UavVis::UavVis(const BoardName& boardName, const uint16_t cameraPort) 
+
+UavVis::UavVis(const BoardName& boardName) 
     : m_boardName(boardName)
     , m_nh(boardName)
-    , m_cameraHandle(cameraPort)
+    , m_cameraHandle()
+    , m_frameFreq( Parameters::getInstance()->getFrameProcessingTime() )
     , m_frameTimer( m_nh.createTimer(m_frameFreq, &UavVis::frameTimerCallback, this) )
     , m_targetCoordinatesPub( m_nh.advertise<uavis::TargetCoordinates>("target_coordinates", 10) )
     , m_uavCoordinates(m_nh, "mavros/local_position/pose", 10)
@@ -25,7 +27,7 @@ geometry_msgs::PoseStamped::ConstPtr UavVis::getCoordinates() const
 }
 
 
-void UavVis::frameTimerCallback(const ros::TimerEvent &event) 
+void UavVis::frameTimerCallback(const ros::TimerEvent& event) 
 {
     simulateVis();
 }

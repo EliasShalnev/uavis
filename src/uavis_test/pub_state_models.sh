@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "Setting \"scout1\" local pose to \"z=100\"" &
-rostopic pub /scout1/mavros/local_position/pose geometry_msgs/PoseStamped "header:
+echo "Setting \"scout0\" local pose to \"z=100\"" &
+rostopic pub /scout0/mavros/local_position/pose geometry_msgs/PoseStamped "header:
   seq: 0
   stamp:
     secs: 0
@@ -18,8 +18,8 @@ pose:
     z: 0.0
     w: 0.0" -r 10 &
 
-echo "Setting \"scout2\" local pose to \"z=100\"" &
-rostopic pub /scout2/mavros/local_position/pose geometry_msgs/PoseStamped "header:
+echo "Setting \"scout1\" local pose to \"z=100\"" &
+rostopic pub /scout1/mavros/local_position/pose geometry_msgs/PoseStamped "header:
   seq: 0
   stamp:
     secs: 0
@@ -36,8 +36,8 @@ pose:
     z: 0.0
     w: 0.0" -r 10 &
 
-echo "Setting \"scout3\" local pose to \"z=100\"" &
-rostopic pub /scout3/mavros/local_position/pose geometry_msgs/PoseStamped "header:
+echo "Setting \"scout2\" local pose to \"z=100\"" &
+rostopic pub /scout2/mavros/local_position/pose geometry_msgs/PoseStamped "header:
   seq: 0
   stamp:
     secs: 0
