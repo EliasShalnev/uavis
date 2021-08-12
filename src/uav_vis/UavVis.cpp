@@ -67,8 +67,6 @@ void UavVis::simulateVis()
 
 void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr &modelStates) 
 {
-
-
     for(auto model : modelStates->name)
     {
         if( model.find(Target::targetNamePrefix) == std::string::npos ) { continue; }

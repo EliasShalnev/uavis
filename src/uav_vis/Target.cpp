@@ -2,7 +2,7 @@
 
 
 Target::Target(const TargetName& targetName) 
-    : m_targetPoseTopicName('/'+targetName+"/local_position")
+    : m_targetPoseTopicName("/sim_"+targetName+"/local_position")
     , m_coordinates(m_nh, m_targetPoseTopicName, 10)
 { }
 

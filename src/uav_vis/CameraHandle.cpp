@@ -1,5 +1,6 @@
 #include "uav_vis/CameraHandle.h"
 
+#include <sys/stat.h>
 #include <sys/unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
@@ -23,10 +24,16 @@ void eos_cb(GstBus* bus, GstMessage* msg, Context* context);
 CameraHandle::CameraHandle(const uint16_t port) 
     :  m_frameDir( std::string(getpwuid( getuid() )->pw_dir ) + "/frames" + ros::this_node::getNamespace() )
 {
-    //TODO - create frame directory
+    const int dir_err = mkdir(m_frameDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    if(-1 == dir_err && errno != EEXIST)
+    {
+        ROS_ERROR_STREAM("Error while creating directory: " << m_frameDir);
+        ros::shutdown();
+    }
+    ROS_INFO_STREAM("Frame location directory: " << m_frameDir);
+
     ROS_INFO_STREAM("Camera port=" << port);
     m_context.m_cameraPort = port;
-    ROS_INFO_STREAM("Frame location directory: " << m_frameDir);
     m_context.m_gstreamerThread = std::thread(initPipeline, &m_context);
 
     while(CameraHandle::isGMainLoopRunning() == false)
@@ -103,7 +110,6 @@ void initPipeline(Context* context)
         "! rtph264depay ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=frame_sink"
     , context->m_cameraPort);
     
-    ROS_INFO_STREAM(pipelineDescription);
     GError* error = NULL;
     context->m_pipeline = gst_parse_launch(pipelineDescription, &error);
     if (error != NULL)

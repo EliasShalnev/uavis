@@ -13,7 +13,7 @@ public:
     using Ptr = std::shared_ptr<Target>;
     using ConstPtr = std::shared_ptr<const Target>;
     using TargetName = std::string;
-    static constexpr char targetNamePrefix[] = "sim_p3at";
+    static constexpr char targetNamePrefix[] = "p3at";
     static constexpr uint32_t LENGTH = 4950; //мм
     static constexpr uint32_t WIDTH = 1970; //мм
 

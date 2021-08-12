@@ -55,22 +55,22 @@ pose:
     w: 0.0" -r 10 &
 
 
-echo "Setting \"sim_p3at_1\" local pose to \"x=0.0 y=0.0\"" &
-rostopic pub /sim_p3at_1/local_position geometry_msgs/Point "x: 0.0
+echo "Setting \"p3at1\" local pose to \"x=0.0 y=0.0\"" &
+rostopic pub /sim_p3at1/local_position geometry_msgs/Point "x: 0.0
 y: 0.0
 z: 0.0" -r 10 &
 
 
-echo "Setting \"sim_p3at_2\" local pose to \"x=0.0 y=0.0\"" 
-rostopic pub /sim_p3at_2/local_position geometry_msgs/Point "x: 30.0
+echo "Setting \"p3at2\" local pose to \"x=0.0 y=0.0\"" 
+rostopic pub /sim_p3at2/local_position geometry_msgs/Point "x: 30.0
 y: 20.0
 z: 0.0" -r 10 &
 
 
 echo "Gazebo model_states publishing..."
 rostopic pub /gazebo/model_states gazebo_msgs/ModelStates "name:
-- 'sim_p3at_1'
-- 'sim_p3at_2'
+- 'p3at1'
+- 'p3at2'
 pose:
 - position:
     x: 0.0
