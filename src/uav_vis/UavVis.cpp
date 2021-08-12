@@ -7,9 +7,10 @@
 
 #include "uav_vis/TecVisionSim.h"
 
-UavVis::UavVis(const BoardName& boardName) 
+UavVis::UavVis(const BoardName& boardName, const uint16_t cameraPort) 
     : m_boardName(boardName)
     , m_nh(boardName)
+    , m_cameraHandle(cameraPort)
     , m_frameTimer( m_nh.createTimer(m_frameFreq, &UavVis::frameTimerCallback, this) )
     , m_targetCoordinatesPub( m_nh.advertise<uavis::TargetCoordinates>("target_coordinates", 10) )
     , m_uavCoordinates(m_nh, "mavros/local_position/pose", 10)
@@ -58,7 +59,7 @@ void UavVis::simulateVis()
 
         msg.coordinates.emplace_back(*targetCoord);
     }
-    // m_cameraHandle.saveFrame(msg.frameNum); //сохранение кадра в каталоге
+    m_cameraHandle.saveFrame(msg.frameNum); //сохранение кадра в каталоге
 
     m_targetCoordinatesPub.publish(msg);
 }
