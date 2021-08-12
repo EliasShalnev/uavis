@@ -26,8 +26,8 @@ public:
      * @return Returns last message that have published.
      *         Returns nullptr if there are no publishers to subscribed topic.
      */
-    boost::shared_ptr<MessageType const> getMessage() const 
-    { 
+    boost::shared_ptr<MessageType const> getMessage() const
+    {
         if(m_subscriber.getNumPublishers() == 0) { return nullptr; }
         return m_currentMessage; 
     }

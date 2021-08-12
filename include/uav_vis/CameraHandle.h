@@ -20,6 +20,8 @@ class CameraHandle
 {
 public:
     CameraHandle(const uint16_t port);
+    CameraHandle(const CameraHandle&) = delete;
+    CameraHandle& operator=(const CameraHandle&) = delete;
     ~CameraHandle();
 
     bool isGMainLoopRunning();

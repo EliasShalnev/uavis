@@ -35,19 +35,19 @@ CameraHandle::CameraHandle(const uint16_t port)
     ROS_INFO_STREAM("Camera port=" << port);
     m_context.m_cameraPort = port;
     m_context.m_gstreamerThread = std::thread(initPipeline, &m_context);
+    m_context.m_gstreamerThread.detach();
 
-    while(CameraHandle::isGMainLoopRunning() == false)
+    while( CameraHandle::isGMainLoopRunning() == false && ros::ok() )
     {
         std::this_thread::sleep_for( std::chrono::seconds(1) );
     }
-    m_context.m_gstreamerThread.detach();
 }
 
 
 CameraHandle::~CameraHandle() 
 {
     /* GMainLoop supposed to be quited firstly to finish thread */
-    g_main_loop_quit(m_context.m_gMainLoop);
+    if(m_context.m_gMainLoop != NULL) { g_main_loop_quit(m_context.m_gMainLoop); }
     while(CameraHandle::isGMainLoopRunning() == true)
     {
         std::this_thread::sleep_for( std::chrono::milliseconds(300) );
