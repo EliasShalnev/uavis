@@ -34,14 +34,13 @@ private:
     inline bool isTargetInCam(const UavCoordinates& uavCoord, 
                               const TargetCoordinates& targetCoord) const;
     inline double evalDistance(const UavCoordinates& uavCoord, 
-                               const TargetCoordinates& targetCoord) const; //дистанция между БпЛА и ЦО (мм)
+                               const TargetCoordinates& targetCoord) const; //дистанция между БпЛА и ЦО (м)
     inline double evalP(const UavCoordinates& uavCoord, 
-                        const TargetCoordinates& targetCoord) const; //размер уменьшенного изображения в пикселях
+                        const TargetCoordinates& targetCoord) const; //размер уменьшенного изображения (пикс/метр)
     inline int getRandom() const ;
 
 private:
-    //TODO - change this parameter
-    const double minP = 10; //(пикс/мм) 
+    const double minP = 10; //(пикс/метр) 
 
     const uint8_t m_firstKindError; //вероятность ошибки первого рода
     const uint8_t m_secondKindError; //веростность ошибки второго рода 

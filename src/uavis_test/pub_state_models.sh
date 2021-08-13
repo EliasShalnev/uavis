@@ -62,7 +62,7 @@ z: 0.0" -r 10 &
 
 
 echo "Setting \"p3at2\" local pose to \"x=0.0 y=0.0\"" 
-rostopic pub /sim_p3at2/local_position geometry_msgs/Point "x: 30.0
+rostopic pub /sim_p3at2/local_position geometry_msgs/Point "x: -30.0
 y: 20.0
 z: 0.0" -r 10 &
 

@@ -55,7 +55,8 @@ void UavVis::simulateVis()
             continue;
         }
         auto targetCoord = target->getCoordinates();
-      
+
+        ROS_INFO_STREAM("Target: " << targetName);
         if( !tecVisionSim.checkTarget(uavCoord, targetCoord) ) { continue; } //проверка возможности обнаружения ЦО
         if( !tecVisionSim.generateSecondKindError() ) { continue; } //симуляция ошибки первого рода 
 
