@@ -24,15 +24,23 @@ void eos_cb(GstBus* bus, GstMessage* msg, Context* context);
 
 
 CameraHandle::CameraHandle()
-    :  m_frameDir( std::string(getpwuid( getuid() )->pw_dir ) + "/frames" + ros::this_node::getNamespace() )
+    : m_frameDir( std::string(getpwuid( getuid() )->pw_dir ) + "/frames" )
+    , m_scoutFrameDir( m_frameDir + ros::this_node::getNamespace() )
 {
-    const int dir_err = mkdir(m_frameDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    int dir_err = mkdir(m_frameDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     if(-1 == dir_err && errno != EEXIST)
     {
         ROS_ERROR_STREAM("Error while creating directory: " << m_frameDir);
         ros::shutdown();
     }
-    ROS_INFO_STREAM("Frame location directory: " << m_frameDir);
+    dir_err = mkdir(m_scoutFrameDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    if(-1 == dir_err && errno != EEXIST)
+    {
+        ROS_ERROR_STREAM("Error while creating directory: " << m_scoutFrameDir);
+        ros::shutdown();
+    }
+
+    ROS_INFO_STREAM("Frame location directory: " << m_scoutFrameDir);
 
     m_context.m_cameraPort = Parameters::getInstance()->getCameraPort();
     m_context.m_gstreamerThread = std::thread(initPipeline, &m_context);
@@ -79,7 +87,7 @@ void CameraHandle::saveFrame(uint32_t frameNum)
 
     /* set location property */
     std::string frameName("frame" + std::to_string(frameNum) + ".jpeg");
-    std::string location = m_frameDir + '/' + frameName;
+    std::string location = m_scoutFrameDir + '/' + frameName;
 
     auto [frameData, frameSize] = m_context.m_currentFrame;
     writeOutFile(location, frameData, frameSize);

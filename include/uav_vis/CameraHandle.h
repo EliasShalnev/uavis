@@ -34,4 +34,5 @@ private:
     Context m_context;
 
     const std::string m_frameDir;
+    const std::string m_scoutFrameDir;
 };

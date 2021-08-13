@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Setting \"scout0\" local pose to \"z=100\"" &
+echo "Setting \"scout0\" local pose to \"x=0 y=0 z=100\"" &
 rostopic pub /scout0/mavros/local_position/pose geometry_msgs/PoseStamped "header:
   seq: 0
   stamp:
@@ -18,7 +18,7 @@ pose:
     z: 0.0
     w: 0.0" -r 10 &
 
-echo "Setting \"scout1\" local pose to \"z=100\"" &
+echo "Setting \"scout1\" local pose to \"x=20 y=50 z=100\"" &
 rostopic pub /scout1/mavros/local_position/pose geometry_msgs/PoseStamped "header:
   seq: 0
   stamp:
@@ -36,7 +36,7 @@ pose:
     z: 0.0
     w: 0.0" -r 10 &
 
-echo "Setting \"scout2\" local pose to \"z=100\"" &
+echo "Setting \"scout2\" local pose to \"x=60 y=40 z=100\"" &
 rostopic pub /scout2/mavros/local_position/pose geometry_msgs/PoseStamped "header:
   seq: 0
   stamp:
