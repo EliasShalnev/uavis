@@ -1,4 +1,4 @@
-#!/bin/bash
+-#!/bin/bash
 
 echo "Setting \"scout0\" local pose to \"x=0 y=0 z=100\"" &
 rostopic pub /scout0/mavros/local_position/pose geometry_msgs/PoseStamped "header:

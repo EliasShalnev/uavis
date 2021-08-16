@@ -43,6 +43,7 @@ void UavVis::simulateVis()
     removeUnregisteredTargets();
 
     uavis::TargetCoordinates msg;
+
     msg.frameNum = ++m_frameNum;
 
     TecVisionSim tecVisionSim;
@@ -50,10 +51,6 @@ void UavVis::simulateVis()
 
     for(auto [targetName, target] : m_targets)
     {
-        if( !target->isActive() ) {
-            ROS_WARN_STREAM(targetName << " isn't active.");
-            continue;
-        }
         auto targetCoord = target->getCoordinates();
 
         ROS_INFO_STREAM("Target: " << targetName);
@@ -61,6 +58,9 @@ void UavVis::simulateVis()
         if( !tecVisionSim.generateSecondKindError() ) { continue; } //симуляция ошибки первого рода 
 
         msg.coordinates.emplace_back(*targetCoord);
+
+        auto movementSpeed = target->getMovementSpeed();
+        msg.speed.emplace_back(*movementSpeed);
     }
     m_cameraHandle.saveFrame(msg.frameNum); //сохранение кадра в каталоге
 
@@ -73,6 +73,7 @@ void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr &mo
     for(auto model : modelStates->name)
     {
         if( model.find(Target::targetNamePrefix) == std::string::npos ) { continue; }
+        // ROS_INFO_STREAM("****" << model);
         if( m_targets.find(model) != m_targets.end() ) { continue; }
 
         ROS_INFO_STREAM("New target \"" << model << "\" was founded.");

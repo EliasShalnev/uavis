@@ -1,19 +1,22 @@
 <launch>
     <group ns="scout0">
+        <arg name="ID" value="0"/>
         <include file="$(find uavis)/launch/uavis.launch">
-            <arg name="port" value="5600"/>
+            <arg name="port" value="$(eval 5600 + arg('ID'))"/>
         </include>
     </group>
 
     <group ns="scout1">
+        <arg name="ID" value="1"/>
         <include file="$(find uavis)/launch/uavis.launch">
-            <arg name="port" value="5601"/>
+            <arg name="port" value="$(eval 5600 + arg('ID'))"/>
         </include>
     </group>
 
     <group ns="scout2">
+        <arg name="ID" value="2"/>
         <include file="$(find uavis)/launch/uavis.launch">
-            <arg name="port" value="5602"/>
+            <arg name="port" value="$(eval 5600 + arg('ID'))"/>
         </include>
     </group>
 </launch>

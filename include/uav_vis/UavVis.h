@@ -26,6 +26,7 @@ public:
 
 public:
     geometry_msgs::PoseStamped::ConstPtr getCoordinates() const;
+
     bool isActive() { return m_uavCoordinates.getNumPublishers() != 0; }
 
 private:

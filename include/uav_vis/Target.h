@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 
-#include <geometry_msgs/Point.h>
+#include <gazebo_msgs/ModelStates.h>
 
 #include "uav_vis/SubMonitor.h"
 
@@ -29,12 +29,14 @@ public:
      * @return true if active
      * @return false if isn't active 
      */
-    bool isActive() const { return m_coordinates.getNumPublishers() != 0; }
+    bool isActive() const;
 
     geometry_msgs::Point::ConstPtr getCoordinates() const;
 
+    geometry_msgs::Vector3::ConstPtr getMovementSpeed() const;
+
 private:
     ros::NodeHandle m_nh;
-    const std::string m_targetPoseTopicName;
-    SubMonitor<geometry_msgs::Point> m_coordinates;
+    const std::string m_targetName;
+    SubMonitor<gazebo_msgs::ModelStates> m_modelStates;
 };
