@@ -51,16 +51,17 @@ private:
     const BoardName m_boardName;
     ros::NodeHandle m_nh;
 
+    //Camera fields
     CameraHandle m_cameraHandle;
-
     ros::Duration m_frameFreq;
     uint32_t m_frameNum {0};
     ros::Timer m_frameTimer;
+
     ros::Publisher m_targetCoordinatesPub;
     
     SubMonitor<geometry_msgs::PoseStamped> m_uavCoordinates;
 
+    //Target fields
     ros::Subscriber m_modelStatesSub;
-
     std::unordered_map<Target::TargetName, Target::ConstPtr> m_targets;
 };

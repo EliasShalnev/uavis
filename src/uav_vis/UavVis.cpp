@@ -11,7 +11,6 @@
 UavVis::UavVis(const BoardName& boardName)
     : m_boardName(boardName)
     , m_nh(boardName)
-    , m_cameraHandle()
     , m_frameFreq( Parameters::getInstance()->getFrameProcessingTime() )
     , m_frameTimer( m_nh.createTimer(m_frameFreq, &UavVis::frameTimerCallback, this) )
     , m_targetCoordinatesPub( m_nh.advertise<uavis::TargetCoordinates>("target_coordinates", 10) )
@@ -43,11 +42,11 @@ void UavVis::simulateVis()
     removeUnregisteredTargets();
 
     uavis::TargetCoordinates msg;
-
     msg.frameNum = ++m_frameNum;
 
-    TecVisionSim tecVisionSim;
     auto uavCoord = getCoordinates();
+
+    TecVisionSim tecVisionSim;
 
     for(auto [targetName, target] : m_targets)
     {
@@ -73,7 +72,6 @@ void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr &mo
     for(auto model : modelStates->name)
     {
         if( model.find(Target::targetNamePrefix) == std::string::npos ) { continue; }
-        // ROS_INFO_STREAM("****" << model);
         if( m_targets.find(model) != m_targets.end() ) { continue; }
 
         ROS_INFO_STREAM("New target \"" << model << "\" was founded.");

@@ -24,7 +24,8 @@ public:
     ~Target() = default;
 
     /**
-     * @brief Target assume to be active while position coordinates is published 
+     * @brief Target assume to be active while model with "m_tagetName" is published
+     *        in "/gazebo/model_states" topic
      * 
      * @return true if active
      * @return false if isn't active 

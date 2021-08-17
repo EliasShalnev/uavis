@@ -13,7 +13,7 @@ namespace CameraParameters
     constexpr double L_x = 0.0223; //линейный размер области фотосенсора по горизонтали (м)
     constexpr double L_y = 0.0149; //линейный размер области фотосенсора по вертикали (м)
     // const uint32_t L = L_x*L_y; //линейный размер чувствительной области фотосенсора
-    constexpr double R = S_x/(L_x); //(пикс/м) плотность пикселов в матрице
+    constexpr double R = S_x/(L_x); //плотность пикселов в матрице (пикс/м)
 } 
 
 
@@ -24,6 +24,8 @@ class TecVisionSim
 
 public:
     TecVisionSim();
+    TecVisionSim(const TecVisionSim&) = delete;
+    TecVisionSim& operator=(const TecVisionSim&) = delete;
     ~TecVisionSim() = default;
 
     bool checkTarget(const UavCoordinates& uavCoord, const TargetCoordinates& targetCoord) const;
@@ -40,7 +42,7 @@ private:
     inline int getRandom() const ;
 
 private:
-    const double minP = 10; //(пикс/метр) 
+    const double min_ppm = 10; //(пикс/метр) 
 
     const uint8_t m_firstKindError; //вероятность ошибки первого рода
     const uint8_t m_secondKindError; //веростность ошибки второго рода 

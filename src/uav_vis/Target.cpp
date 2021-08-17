@@ -14,21 +14,17 @@ bool Target::isActive() const
         if(model == m_targetName) { return true; }
     }
     return false;
-    // auto models = m_modelStates.getMessage()->name;
-    // auto target = findTarget();
-    // if( target == models.end() ) { return false; }
-    // return true;
 }
 
 
 geometry_msgs::Point::ConstPtr Target::getCoordinates() const 
 {
     auto models = m_modelStates.getMessage()->name;
-    for(uint i=0; i<models.size(); ++i)
+    for(unsigned int i=0; i<models.size(); ++i)
     {
         if(models[i] == m_targetName)
         {   
-            auto pose = new geometry_msgs::Point( m_modelStates.getMessage()->pose[i].position );
+            auto pose = new geometry_msgs::Point(m_modelStates.getMessage()->pose[i].position);
             return geometry_msgs::Point::ConstPtr(pose);
         }
     }
@@ -39,7 +35,7 @@ geometry_msgs::Point::ConstPtr Target::getCoordinates() const
 geometry_msgs::Vector3::ConstPtr Target::getMovementSpeed() const
 {
     auto models = m_modelStates.getMessage()->name;
-    for(uint i=0; i<models.size(); ++i)
+    for(unsigned int i=0; i<models.size(); ++i)
     {
         if(models[i] == m_targetName)
         {   
