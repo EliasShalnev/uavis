@@ -8,7 +8,7 @@
 #include "uav_vis/Parameters.h"
 
 
-UavVis::UavVis(const BoardName& boardName) 
+UavVis::UavVis(const BoardName& boardName)
     : m_boardName(boardName)
     , m_nh(boardName)
     , m_cameraHandle()
@@ -97,5 +97,4 @@ void UavVis::removeUnregisteredTargets()
         else { ++it; }
     }
 }
-
 

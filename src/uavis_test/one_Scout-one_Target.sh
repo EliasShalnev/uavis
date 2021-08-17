@@ -1,7 +1,7 @@
 #!/bin/bash
 
 scout0=/scout0
-scout0_x=100.0, scout0_y=200.0, scout0_z=2750.0
+scout0_x=100.0, scout0_y=200.0, scout0_z=900.0
 echo "Setting \"$scout0\" local pose to \"x=$scout0_x y=$scout0_y z=$scout0_z\"" &
 rostopic pub $scout0/mavros/local_position/pose geometry_msgs/PoseStamped "header:
   seq: 0
@@ -13,7 +13,7 @@ pose:
   position:
     x: 100.0
     y: 200.0
-    z: 1000.0
+    z: 900.0
   orientation:
     x: 0.0
     y: 0.0

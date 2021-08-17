@@ -15,8 +15,11 @@ bool TecVisionSim::checkTarget(const UavCoordinates& uavCoord,
                                const TargetCoordinates& targetCoord) const
 {
     if( !isTargetInCam(uavCoord, targetCoord) ) { return false; }
-    
-    return evalP(uavCoord, targetCoord) >= minP;
+
+    auto ppm = eval_ppm(uavCoord, targetCoord);
+    if(ppm >= minP) { ROS_INFO_STREAM("ppm:" << ppm); }
+    else { ROS_ERROR_STREAM( "ppm = " << ppm << " should be " << minP); }
+    return eval_ppm(uavCoord, targetCoord) >= minP;
 }
 
 
@@ -42,7 +45,7 @@ inline bool TecVisionSim::isTargetInCam(const UavCoordinates& uavCoord,
 {
     const auto height = uavCoord->pose.position.z;
     const auto A_x = CameraParameters::S_x*( (height/CameraParameters::f - 1)/CameraParameters::R );
-    const auto A_y = CameraParameters::S_y*( (height/CameraParameters::f - 1)/CameraParameters::R );
+    const auto A_y = CameraParameters::S_y*( (height/CameraParameters::f  - 1)/CameraParameters::R );
 
     const auto target_x = targetCoord->x;
     const auto target_y = targetCoord->y;
@@ -98,11 +101,11 @@ inline double TecVisionSim::evalDistance(const UavCoordinates& uavCoord,
 }
 
 
-inline double TecVisionSim::evalP(const UavCoordinates& uav, const TargetCoordinates& target) const
+inline double TecVisionSim::eval_ppm(const UavCoordinates& uav, const TargetCoordinates& target) const
 {
     const double d = evalDistance(uav, target);
-    constexpr double h = Target::LENGTH / 1000;
-    return (h*CameraParameters::R)/(d/CameraParameters::f - 1);
+    // constexpr double h = Target::LENGTH / 1000;
+    return (/*h* */CameraParameters::R)/(d/CameraParameters::f - 1);
 }
 
 
