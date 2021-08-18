@@ -40,15 +40,15 @@ void Parameters::parseArgs(int argc, char** argv)
                  std::string(argv[i]) == std::string("--first-kind-error") )
         {
             auto firstKindErrStr = std::string( argv[i+1] );
-            auto firstKindErrInt = std::stoi(firstKindErrStr);
-            m_firstKindError = static_cast<uint8_t>(firstKindErrInt);
+            auto firstKindErrDouble = std::atof( firstKindErrStr.c_str() );
+            m_firstKindError = static_cast<float>(firstKindErrDouble);
         }
         else if( std::string(argv[i]) == std::string("-s") || 
                  std::string(argv[i]) == std::string("--second-kind-error") )
         {
             auto secondKindErrStr = std::string( argv[i+1] );
-            auto secondKindErrInt = std::stoi(secondKindErrStr);
-            m_secondKindError = static_cast<uint8_t>(secondKindErrInt);
+            auto secondKindErrDouble = std::atof( secondKindErrStr.c_str() );
+            m_secondKindError = static_cast<float>(secondKindErrDouble);
         }
     }
 }
@@ -58,7 +58,7 @@ void Parameters::print()
 {
     ROS_INFO_STREAM("--port " <<  m_cameraPort);
     ROS_INFO_STREAM("--frame-proc-time " << static_cast<unsigned int>(m_frameProcessingTime) );
-    ROS_INFO_STREAM("--second-kind-error " << static_cast<unsigned int>(m_secondKindError) );
-    ROS_INFO_STREAM("--first-kind-error " << static_cast<unsigned int>(m_firstKindError) );
+    ROS_INFO_STREAM("--second-kind-error " << m_secondKindError);
+    ROS_INFO_STREAM("--first-kind-error " << m_firstKindError);
     
 }

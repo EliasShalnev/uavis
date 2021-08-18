@@ -18,14 +18,14 @@ public:
 
     const uint16_t& getCameraPort() const { return m_cameraPort; }
     const uint8_t& getFrameProcessingTime() const { return m_frameProcessingTime; } 
-    const uint8_t& getFirstKindError() const { return m_firstKindError; }
-    const uint8_t& getSecondKindError() const { return m_secondKindError; }
+    const float& getFirstKindError() const { return m_firstKindError; }
+    const float& getSecondKindError() const { return m_secondKindError; }
 
 private:
     uint16_t m_cameraPort = 5600;
     uint8_t m_frameProcessingTime = 3;
-    uint8_t m_firstKindError = 15;
-    uint8_t m_secondKindError = 75;
+    float m_firstKindError = 15;
+    float m_secondKindError = 75;
 
 private:
     Parameters() = default;

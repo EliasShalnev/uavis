@@ -37,13 +37,12 @@ private:
                               const TargetCoordinates& targetCoord) const;
     inline double evalDistance(const UavCoordinates& uavCoord, 
                                const TargetCoordinates& targetCoord) const; //дистанция между БпЛА и ЦО (м)
-    inline double eval_ppm(const UavCoordinates& uavCoord, 
-                        const TargetCoordinates& targetCoord) const; //размер уменьшенного изображения (пикс/метр)
+    inline double eval_ppm(const UavCoordinates& uavCoord) const; //размер уменьшенного изображения (пикс/метр)
     inline int getRandom() const ;
 
 private:
     const double min_ppm = 10; //(пикс/метр) 
 
-    const uint8_t m_firstKindError; //вероятность ошибки первого рода
-    const uint8_t m_secondKindError; //веростность ошибки второго рода 
+    const float m_firstKindError; //вероятность ошибки первого рода
+    const float m_secondKindError; //веростность ошибки второго рода 
 };
