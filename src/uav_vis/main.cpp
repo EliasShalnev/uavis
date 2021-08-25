@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, nodeName);
 
-    if(ros::this_node::getNamespace() == "/" )
+    if(ros::this_node::getNamespace() == "/")
     {
         ROS_ERROR_STREAM("uavis should be launched whith namespace");
         return -1;
@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     parameters->parseArgs(argc, argv);
     parameters->print();
 
-    UavVis uavvis(ros::this_node::getNamespace());
+    UavVis uavvis( ros::this_node::getNamespace() );
 
     ros::spin();
     return 0;

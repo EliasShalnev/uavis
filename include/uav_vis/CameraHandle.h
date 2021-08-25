@@ -9,6 +9,8 @@ struct Context
 {
     GstElement* m_pipeline = NULL;
     GMainLoop* m_gMainLoop = NULL;
+    enum InitStatus{Initing = 0, FAILED, SUCCESSED};
+    InitStatus m_initStatus = InitStatus::Initing;
     std::pair<char*, size_t> m_currentFrame {NULL, 0};
     std::thread m_gstreamerThread;
     std::mutex m_mutex;

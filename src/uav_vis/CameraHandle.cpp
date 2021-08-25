@@ -46,7 +46,7 @@ CameraHandle::CameraHandle()
     m_context.m_gstreamerThread = std::thread(initPipeline, &m_context);
     m_context.m_gstreamerThread.detach();
 
-    while( CameraHandle::isGMainLoopRunning() == false && ros::ok() )
+    while( m_context.m_initStatus == Context::InitStatus::Initing && ros::ok() )
     {
         std::this_thread::sleep_for( std::chrono::seconds(1) );
     }
@@ -147,13 +147,16 @@ void initPipeline(Context* context)
     gst_element_set_state(context->m_pipeline, GST_STATE_PLAYING);
 
     /* Wait for state change */
-    GstStateChangeReturn ret = gst_element_get_state(context->m_pipeline, NULL, NULL, -1);
+    GstStateChangeReturn ret = gst_element_get_state(context->m_pipeline, NULL, NULL, GST_CLOCK_TIME_NONE);
+    // GstStateChangeReturn ret = gst_element_get_state( context->m_pipeline, NULL, NULL, 5*std::pow(10, 9) );
     if(ret != GST_STATE_CHANGE_SUCCESS)
     {
         ROS_ERROR_STREAM("Unable to set the pipeline to the playing state.");
+        context->m_initStatus = Context::InitStatus::FAILED;
         return;
     }
 
+    context->m_initStatus = Context::InitStatus::SUCCESSED;
     context->m_gMainLoop = g_main_loop_new (NULL, FALSE);
     g_main_loop_run(context->m_gMainLoop);
 }

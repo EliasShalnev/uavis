@@ -34,6 +34,8 @@ void UavVis::frameTimerCallback(const ros::TimerEvent& event)
 
 void UavVis::simulateVis() 
 {
+    auto start = std::chrono::high_resolution_clock::now();
+    //TODO - fix checkTarget() should be invoked 3 sec after save frame 
     if( !isActive() ) { 
         ROS_WARN_STREAM(m_boardName << " isn't active.");
         return;
@@ -64,10 +66,16 @@ void UavVis::simulateVis()
     m_cameraHandle.saveFrame(msg.frameNum); //сохранение кадра в каталоге
 
     m_targetCoordinatesPub.publish(msg);
+    
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    auto simulationTime = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+    ROS_INFO_STREAM( "Simul time " << simulationTime.count() << "ms" );
 }
 
 
-void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr &modelStates) 
+void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr& modelStates) 
 {
     for(auto model : modelStates->name)
     {

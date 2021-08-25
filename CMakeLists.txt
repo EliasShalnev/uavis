@@ -23,7 +23,8 @@ set(ENV{PKG_CONFIG_PATH})
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     geometry_msgs
-    message_generation)
+    message_generation
+)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)

@@ -39,7 +39,7 @@ private:
      * 
      * @param modelStates 
      */
-    void checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr &modelStates);
+    void checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr& modelStates);
 
     /**
     * @brief checks if targets is active. Unactive targets will be removed from 
