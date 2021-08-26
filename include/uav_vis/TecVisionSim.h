@@ -6,7 +6,7 @@
 
 namespace CameraParameters
 {
-    constexpr double f=0.035; //фокусное расстояние (м)
+    constexpr double f=0.050; //фокусное расстояние (м)
     constexpr uint32_t S_x = 6400; //разрешение матрицы по горизонтали (пикс)
     constexpr uint32_t S_y = 4800; //разрешение матрицы по вертикали (пикс)
     constexpr uint32_t S = S_x*S_y; //размер фотосенсора в пикселях
