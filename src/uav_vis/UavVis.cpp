@@ -57,6 +57,8 @@ void UavVis::simulateVis()
 
     uavis::TargetCoordinates msg;
     msg.frameNum = m_frameNum;
+    msg.framePath = m_cameraHandle.getScoutFrameDir() + "/frame" 
+                    + std::to_string(m_frameNum) + ".jpeg";
 
     auto uavCoord = getCoordinates();
 

@@ -27,6 +27,8 @@ public:
 
     bool isGMainLoopRunning();
 
+    const std::string& getScoutFrameDir() const { return m_scoutFrameDir; }
+
     void saveFrame(uint32_t frameNum);
 
 private:
