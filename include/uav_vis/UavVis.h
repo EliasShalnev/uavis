@@ -29,9 +29,11 @@ public:
 
     bool isActive() { return m_uavCoordinates.getNumPublishers() != 0; }
 
-private:
-    void frameTimerCallback(const ros::TimerEvent &event);
+    void startSimulation();
 
+    void stopSimulation();
+
+private:
     void simulateVis();
 
     /**

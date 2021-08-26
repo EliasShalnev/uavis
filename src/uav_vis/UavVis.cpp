@@ -12,7 +12,6 @@ UavVis::UavVis(const BoardName& boardName)
     : m_boardName(boardName)
     , m_nh(boardName)
     , m_frameFreq( Parameters::getInstance()->getFrameProcessingTime() )
-    , m_frameTimer( m_nh.createTimer(m_frameFreq, &UavVis::frameTimerCallback, this) )
     , m_targetCoordinatesPub( m_nh.advertise<uavis::TargetCoordinates>("target_coordinates", 10) )
     , m_uavCoordinates(m_nh, "mavros/local_position/pose", 10)
     , m_modelStatesSub( m_nh.subscribe<gazebo_msgs::ModelStates>
@@ -26,16 +25,29 @@ geometry_msgs::PoseStamped::ConstPtr UavVis::getCoordinates() const
 }
 
 
-void UavVis::frameTimerCallback(const ros::TimerEvent& event) 
+void UavVis::startSimulation() 
 {
-    simulateVis();
+    m_cameraHandle.saveFrame(++m_frameNum); //сохранение кадра в каталоге
+
+    m_frameTimer = m_nh.createTimer(m_frameFreq, [this](const ros::TimerEvent& event)
+    {
+        simulateVis();
+        startSimulation();
+    }, true, false);
+    m_frameTimer.start();
 }
 
 
-void UavVis::simulateVis() 
+void UavVis::stopSimulation() 
+{
+    m_frameTimer.stop();
+}
+
+
+void UavVis::simulateVis()
 {
     auto start = std::chrono::high_resolution_clock::now();
-    //TODO - fix checkTarget() should be invoked 3 sec after save frame 
+
     if( !isActive() ) { 
         ROS_WARN_STREAM(m_boardName << " isn't active.");
         return;
@@ -44,7 +56,7 @@ void UavVis::simulateVis()
     removeUnregisteredTargets();
 
     uavis::TargetCoordinates msg;
-    msg.frameNum = ++m_frameNum;
+    msg.frameNum = m_frameNum;
 
     auto uavCoord = getCoordinates();
 
@@ -63,7 +75,6 @@ void UavVis::simulateVis()
         auto movementSpeed = target->getMovementSpeed();
         msg.speed.emplace_back(*movementSpeed);
     }
-    m_cameraHandle.saveFrame(msg.frameNum); //сохранение кадра в каталоге
 
     m_targetCoordinatesPub.publish(msg);
     

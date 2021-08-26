@@ -25,6 +25,7 @@ int main(int argc, char **argv)
     parameters->print();
 
     UavVis uavvis( ros::this_node::getNamespace() );
+    uavvis.startSimulation();
 
     ros::spin();
     return 0;
