@@ -16,7 +16,7 @@ bool TecVisionSim::checkTarget(const UavCoordinates& uavCoord,
 {
     if( !isTargetInCam(uavCoord, targetCoord) ) { return false; }
 
-    auto ppm = eval_ppm(uavCoord);
+    auto ppm = eval_ppm(uavCoord, targetCoord);
     if(ppm >= min_ppm) { ROS_INFO_STREAM("ppm: " << ppm); }
     else { ROS_ERROR_STREAM( "ppm = " << ppm << " should be " << min_ppm); }
     return ppm >= min_ppm;
@@ -44,9 +44,16 @@ bool TecVisionSim::generateSecondKindError() const
 inline bool TecVisionSim::isTargetInCam(const UavCoordinates& uavCoord, 
                                         const TargetCoordinates& targetCoord) const 
 {
-    //TODO - должна быть разность высот ЦО и БпЛА
-    const auto height = uavCoord->z;
-    const auto temp = (height/CameraParameters::f - 1)/CameraParameters::R;
+    const auto uavHeight = uavCoord->z;
+    const auto targetHeight = targetCoord->z;
+    const auto heightDiff = uavHeight - targetHeight;
+    if(heightDiff < 0) { 
+        ROS_ERROR_STREAM("UAV height is lesser than target");
+        ROS_ERROR_STREAM(" UAV height: " << uavHeight << " Target height: " << targetHeight);
+        return false;
+    }
+
+    const auto temp = (heightDiff/CameraParameters::f - 1)/CameraParameters::R;
     const auto A_x = CameraParameters::S_x*(temp);
     const auto A_y = CameraParameters::S_y*(temp);
 
@@ -62,7 +69,7 @@ inline bool TecVisionSim::isTargetInCam(const UavCoordinates& uavCoord,
     const auto max_x = uav_x + A_x/2;
     const auto max_y = uav_y + A_y/2;
 
-    ROS_INFO_STREAM("UAV x = " << uav_x << " UAV y = " << uav_y << " UAV z = " << height);
+    ROS_INFO_STREAM("UAV x = " << uav_x << " UAV y = " << uav_y << " UAV z = " << uavHeight);
 
     if( (min_x < target_x) && (target_x < max_x) && 
         (min_y < target_y) && (target_y < max_y) )
@@ -73,13 +80,15 @@ inline bool TecVisionSim::isTargetInCam(const UavCoordinates& uavCoord,
         ROS_INFO_STREAM("target_y = " << target_y << 
                         " min_y = " << min_y << 
                         " max_y = " << max_y);
+        ROS_INFO_STREAM("target_z = " << targetHeight);
     } else {
         ROS_ERROR_STREAM( "target_x = " << target_x << 
                           " min_x = " << min_x << 
                           " max_x = " << max_x);
         ROS_ERROR_STREAM("target_y = " << target_y << 
                          " min_y = " << min_y << 
-                         " max_y = " << max_y); 
+                         " max_y = " << max_y);
+        ROS_ERROR_STREAM("target_z = " << targetHeight);
     }
 
     return (min_x < target_x) && (target_x < max_x) && 
@@ -107,11 +116,18 @@ inline double TecVisionSim::evalDistance(const UavCoordinates& uavCoord,
 }
 
 
-inline double TecVisionSim::eval_ppm(const UavCoordinates& uavCoord) const
+inline double TecVisionSim::eval_ppm(const UavCoordinates& uavCoord,
+                                     const TargetCoordinates& targetCoord) const
 {
-    //TODO - должна быть разность высот ЦО и БпЛА
-    const auto height = uavCoord->z;
-    return CameraParameters::R/(height/CameraParameters::f - 1);
+    const auto uavHeight = uavCoord->z;
+    const auto targetHeight = targetCoord->z;
+    const auto heightDiff = uavHeight - targetHeight;
+    if(heightDiff < 0) { 
+        ROS_ERROR_STREAM("UAV height is lesser than target");
+        ROS_ERROR_STREAM(" UAV height: " << uavHeight << " Target height: " << targetHeight);
+        return false;
+    }
+    return CameraParameters::R/(heightDiff/CameraParameters::f - 1);
 }
 
 
