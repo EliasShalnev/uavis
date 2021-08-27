@@ -57,6 +57,7 @@ private:
 
     ros::Publisher m_targetCoordinatesPub;
     
+    //UAV model monitor
     Model m_uavModel;
 
     //Target fields

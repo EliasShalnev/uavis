@@ -10,7 +10,6 @@
 
 UavVis::UavVis(const BoardName& boardName)
     : m_boardName(boardName)
-    , m_nh()
     , m_frameFreq( Parameters::getInstance()->getFrameProcessingTime() )
     , m_targetCoordinatesPub( m_nh.advertise<uavis::TargetCoordinates>("target_coordinates", 10) )
     , m_uavModel(boardName)
@@ -78,7 +77,7 @@ void UavVis::simulateVis()
 
     auto simulationTime = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    ROS_INFO_STREAM( "Simul time " << simulationTime.count() << " [microsec]" );
+    ROS_INFO_STREAM("Simul time " << simulationTime.count() << " [microsec]");
 }
 
 

@@ -2,6 +2,7 @@
     <group ns="scout0">
         <arg name="ID" value="0"/>
         <include file="$(find uavis)/launch/uavis.launch">
+            <arg name="uavModel" value="typhoon_h480$(arg ID)"/>
             <arg name="port" value="$(eval 5600 + arg('ID'))"/>
         </include>
     </group>
@@ -9,6 +10,7 @@
     <group ns="scout1">
         <arg name="ID" value="1"/>
         <include file="$(find uavis)/launch/uavis.launch">
+            <arg name="uavModel" value="typhoon_h480$(arg ID)"/>
             <arg name="port" value="$(eval 5600 + arg('ID'))"/>
         </include>
     </group>
@@ -16,6 +18,7 @@
     <group ns="scout2">
         <arg name="ID" value="2"/>
         <include file="$(find uavis)/launch/uavis.launch">
+            <arg name="uavModel" value="typhoon_h480$(arg ID)"/>
             <arg name="port" value="$(eval 5600 + arg('ID'))"/>
         </include>
     </group>
