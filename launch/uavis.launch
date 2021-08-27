@@ -1,10 +1,12 @@
 <launch>
+    <arg name="uavModel" default="typhoon_h4800"/>
     <arg name="port" default="5600"/>
     <arg name="frameProcessingTime" default="3"/>
     <arg name="firstKindError" default="0.15"/>
     <arg name="secondKindError" default="0.75"/>
     
-    <node name="uav_vis" pkg="uavis" type="uav_vis" output="screen" args="--port $(arg port)
+    <node name="uav_vis" pkg="uavis" type="uav_vis" output="screen" args="--uavModel $(arg uavModel)
+        --port $(arg port)
         --frame-proc-time $(arg frameProcessingTime) --first-kind-error $(arg firstKindError)
         --second-kind-error $(arg secondKindError)"/>
 </launch>

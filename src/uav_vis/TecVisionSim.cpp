@@ -45,7 +45,7 @@ inline bool TecVisionSim::isTargetInCam(const UavCoordinates& uavCoord,
                                         const TargetCoordinates& targetCoord) const 
 {
     //TODO - должна быть разность высот ЦО и БпЛА
-    const auto height = uavCoord->pose.position.z;
+    const auto height = uavCoord->z;
     const auto temp = (height/CameraParameters::f - 1)/CameraParameters::R;
     const auto A_x = CameraParameters::S_x*(temp);
     const auto A_y = CameraParameters::S_y*(temp);
@@ -53,8 +53,8 @@ inline bool TecVisionSim::isTargetInCam(const UavCoordinates& uavCoord,
     const auto target_x = targetCoord->x;
     const auto target_y = targetCoord->y;
 
-    const auto uav_x = uavCoord->pose.position.x;
-    const auto uav_y = uavCoord->pose.position.y;
+    const auto uav_x = uavCoord->x;
+    const auto uav_y = uavCoord->y;
 
     const auto min_x = uav_x - A_x/2;
     const auto min_y = uav_y - A_y/2;
@@ -62,7 +62,7 @@ inline bool TecVisionSim::isTargetInCam(const UavCoordinates& uavCoord,
     const auto max_x = uav_x + A_x/2;
     const auto max_y = uav_y + A_y/2;
 
-    ROS_INFO_STREAM("UAV height: " << height);
+    ROS_INFO_STREAM("UAV x = " << uav_x << " UAV y = " << uav_y << " UAV z = " << height);
 
     if( (min_x < target_x) && (target_x < max_x) && 
         (min_y < target_y) && (target_y < max_y) )
@@ -90,15 +90,15 @@ inline bool TecVisionSim::isTargetInCam(const UavCoordinates& uavCoord,
 inline double TecVisionSim::evalDistance(const UavCoordinates& uavCoord, 
                                          const TargetCoordinates& targetCoord) const
 {
-    const double uavX = uavCoord->pose.position.x;
+    const double uavX = uavCoord->x;
     const double targetX = targetCoord->x;
     const double deltaX = uavX-targetX;
 
-    const double uavY = uavCoord->pose.position.y;
+    const double uavY = uavCoord->y;
     const double targetY = targetCoord->y;
     const double deltaY = uavX-targetY;
 
-    const double uavHeight = uavCoord->pose.position.z;
+    const double uavHeight = uavCoord->z;
 
     const double meters = std::sqrt( ( std::pow(deltaX, 2) + 
                                        std::pow(deltaY, 2) + 
@@ -110,7 +110,7 @@ inline double TecVisionSim::evalDistance(const UavCoordinates& uavCoord,
 inline double TecVisionSim::eval_ppm(const UavCoordinates& uavCoord) const
 {
     //TODO - должна быть разность высот ЦО и БпЛА
-    const auto height = uavCoord->pose.position.z;
+    const auto height = uavCoord->z;
     return CameraParameters::R/(height/CameraParameters::f - 1);
 }
 

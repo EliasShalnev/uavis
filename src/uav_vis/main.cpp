@@ -14,26 +14,11 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, nodeName);
 
-    auto boardName = ros::this_node::getNamespace();
-
-    if(boardName == "/")
-    {
-        ROS_ERROR_STREAM("uavis should be launched with namespace");
-        return -1;
-    }
-
-    if( boardName.find("/scout") == std::string::npos)
-    {
-        ROS_ERROR_STREAM("uavis should be launched with scout<number> namespace");
-        return -1;
-    }
-    
     auto parameters = Parameters::getInstance();
     parameters->parseArgs(argc, argv);
-    ROS_INFO_STREAM("Boardname: " << boardName);
     parameters->print();
 
-    UavVis uavvis(boardName);
+    UavVis uavvis( parameters->getUavModel() );
     uavvis.startSimulation();
 
     ros::spin();

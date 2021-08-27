@@ -9,7 +9,7 @@
 #include <gazebo_msgs/ModelStates.h>
 
 #include "uav_vis/SubMonitor.h"
-#include "uav_vis/Target.h"
+#include "uav_vis/Model.h"
 #include "uav_vis/CameraHandle.h"
 
 
@@ -25,10 +25,6 @@ public:
     ~UavVis() = default;
 
 public:
-    geometry_msgs::PoseStamped::ConstPtr getCoordinates() const;
-
-    bool isActive() { return m_uavCoordinates.getNumPublishers() != 0; }
-
     void startSimulation();
 
     void stopSimulation();
@@ -61,9 +57,9 @@ private:
 
     ros::Publisher m_targetCoordinatesPub;
     
-    SubMonitor<geometry_msgs::PoseStamped> m_uavCoordinates;
+    Model m_uavModel;
 
     //Target fields
     ros::Subscriber m_modelStatesSub;
-    std::unordered_map<Target::TargetName, Target::ConstPtr> m_targets;
+    std::unordered_map<Model::ModelName, Model::ConstPtr> m_targets;
 };

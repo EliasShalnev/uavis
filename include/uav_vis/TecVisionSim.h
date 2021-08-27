@@ -1,7 +1,6 @@
 #pragma once
 
 #include "uav_vis/UavVis.h"
-#include "uav_vis/Target.h"
 
 
 namespace CameraParameters
@@ -19,7 +18,7 @@ namespace CameraParameters
 
 class TecVisionSim
 {
-    using UavCoordinates = geometry_msgs::PoseStamped::ConstPtr;
+    using UavCoordinates = geometry_msgs::Point::ConstPtr;
     using TargetCoordinates = geometry_msgs::Point::ConstPtr;
 
 public:

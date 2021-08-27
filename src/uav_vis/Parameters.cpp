@@ -22,8 +22,13 @@ void Parameters::parseArgs(int argc, char** argv)
 {
     for(int i=1; i+1<argc; i+=2)
     {
-        if( std::string(argv[i]) == std::string("-p") ||
-            std::string(argv[i]) == std::string("--port") ) 
+        if( std::string(argv[i]) == std::string("-u") ||
+            std::string(argv[i]) == std::string("--uavModel") )
+        {
+            m_uavModelName = std::string( argv[i+1] );
+        }
+        else if( std::string(argv[i]) == std::string("-p") ||
+                 std::string(argv[i]) == std::string("--port") ) 
         { 
             auto portStr = std::string( argv[i+1] );
             auto portInt = std::stoi(portStr);
@@ -56,6 +61,7 @@ void Parameters::parseArgs(int argc, char** argv)
 
 void Parameters::print() 
 {
+    ROS_INFO_STREAM("--uavModel " << m_uavModelName);
     ROS_INFO_STREAM("--port " <<  m_cameraPort);
     ROS_INFO_STREAM("--frame-proc-time " << static_cast<unsigned int>(m_frameProcessingTime) );
     ROS_INFO_STREAM("--second-kind-error " << m_secondKindError);

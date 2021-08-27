@@ -10,19 +10,13 @@
 
 UavVis::UavVis(const BoardName& boardName)
     : m_boardName(boardName)
-    , m_nh(boardName)
+    , m_nh()
     , m_frameFreq( Parameters::getInstance()->getFrameProcessingTime() )
     , m_targetCoordinatesPub( m_nh.advertise<uavis::TargetCoordinates>("target_coordinates", 10) )
-    , m_uavCoordinates(m_nh, "mavros/local_position/pose", 10)
+    , m_uavModel(boardName)
     , m_modelStatesSub( m_nh.subscribe<gazebo_msgs::ModelStates>
                         ("/gazebo/model_states", 10, &UavVis::checkRegisteredTargets, this) )
 { }
-
-
-geometry_msgs::PoseStamped::ConstPtr UavVis::getCoordinates() const
-{
-    return m_uavCoordinates.getMessage();
-}
 
 
 void UavVis::startSimulation() 
@@ -48,7 +42,7 @@ void UavVis::simulateVis()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    if( !isActive() ) { 
+    if( !m_uavModel.isActive() ) { 
         ROS_WARN_STREAM(m_boardName << " isn't active.");
         return;
     }
@@ -60,7 +54,7 @@ void UavVis::simulateVis()
     msg.framePath = m_cameraHandle.getScoutFrameDir() + "/frame" 
                     + std::to_string(m_frameNum) + ".jpeg";
 
-    auto uavCoord = getCoordinates();
+    auto uavCoord = m_uavModel.getCoordinates();
 
     TecVisionSim tecVisionSim;
 
@@ -84,7 +78,7 @@ void UavVis::simulateVis()
 
     auto simulationTime = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-    ROS_INFO_STREAM( "Simul time " << simulationTime.count() << "ms" );
+    ROS_INFO_STREAM( "Simul time " << simulationTime.count() << " [microsec]" );
 }
 
 
@@ -92,11 +86,11 @@ void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr& mo
 {
     for(auto model : modelStates->name)
     {
-        if( model.find(Target::targetNamePrefix) == std::string::npos ) { continue; }
+        if( model.find("p3at") == std::string::npos ) { continue; }
         if( m_targets.find(model) != m_targets.end() ) { continue; }
 
         ROS_INFO_STREAM("New target \"" << model << "\" was founded.");
-        m_targets.emplace( model, new Target(model) );
+        m_targets.emplace( model, new Model(model) );
     }
 }
 
@@ -105,7 +99,7 @@ void UavVis::removeUnregisteredTargets()
 {
     for(auto it = m_targets.begin(); it != m_targets.end(); )
     {
-        Target::TargetName targetName = it->first;
+        Model::ModelName targetName = it->first;
 
         if( !it->second->isActive() )
         {
