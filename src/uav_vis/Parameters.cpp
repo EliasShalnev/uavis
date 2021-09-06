@@ -66,5 +66,4 @@ void Parameters::print()
     ROS_INFO_STREAM("--frame-proc-time " << static_cast<unsigned int>(m_frameProcessingTime) );
     ROS_INFO_STREAM("--second-kind-error " << m_secondKindError);
     ROS_INFO_STREAM("--first-kind-error " << m_firstKindError);
-    
 }

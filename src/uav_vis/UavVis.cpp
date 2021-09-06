@@ -50,7 +50,7 @@ void UavVis::simulateVis()
 
     uavis::TargetCoordinates msg;
     msg.frameNum = m_frameNum;
-    msg.framePath = m_cameraHandle.getScoutFrameDir() + "/frame" 
+    msg.framePath = m_cameraHandle.getScoutFrameDir() + "/frame"
                     + std::to_string(m_frameNum) + ".jpeg";
 
     auto uavCoord = m_uavModel.getCoordinates();
@@ -72,7 +72,7 @@ void UavVis::simulateVis()
     }
 
     m_targetCoordinatesPub.publish(msg);
-    
+
     auto stop = std::chrono::high_resolution_clock::now();
 
     auto simulationTime = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
@@ -81,7 +81,7 @@ void UavVis::simulateVis()
 }
 
 
-void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr& modelStates) 
+void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr& modelStates)
 {
     for(auto model : modelStates->name)
     {
@@ -94,7 +94,7 @@ void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr& mo
 }
 
 
-void UavVis::removeUnregisteredTargets() 
+void UavVis::removeUnregisteredTargets()
 {
     for(auto it = m_targets.begin(); it != m_targets.end(); )
     {
