@@ -23,6 +23,7 @@ set(ENV{PKG_CONFIG_PATH})
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     geometry_msgs
+    target_dmg
     message_generation
 )
 
@@ -151,6 +152,7 @@ include_directories(
 add_executable(uav_vis 
                 src/uav_vis/UavVis.cpp
                 src/uav_vis/Model.cpp
+                src/uav_vis/Target.cpp
                 src/uav_vis/CameraHandle.cpp
                 src/uav_vis/TecVisionSim.cpp
                 src/uav_vis/Parameters.cpp

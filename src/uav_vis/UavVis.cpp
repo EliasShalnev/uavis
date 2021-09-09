@@ -39,14 +39,13 @@ void UavVis::stopSimulation()
 
 void UavVis::simulateVis()
 {
-    auto start = std::chrono::high_resolution_clock::now();
-
     if( !m_uavModel.isActive() ) { 
         ROS_WARN_STREAM(m_boardName << " isn't active.");
         return;
     }
     
-    removeUnregisteredTargets();
+    //TODO -раскомментировать, когда будет адекватное удаление моделей
+    // removeUnregisteredTargets();
 
     uavis::TargetCoordinates msg;
     msg.frameNum = m_frameNum;
@@ -59,6 +58,7 @@ void UavVis::simulateVis()
 
     for(auto [targetName, target] : m_targets)
     {
+        if( !target->isActive() ) { continue; } //TODO - убрать, когда будет адекватное удаление моделей
         auto targetCoord = target->getCoordinates();
 
         ROS_INFO_STREAM("Target: " << targetName);
@@ -72,12 +72,6 @@ void UavVis::simulateVis()
     }
 
     m_targetCoordinatesPub.publish(msg);
-
-    auto stop = std::chrono::high_resolution_clock::now();
-
-    auto simulationTime = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-
-    ROS_INFO_STREAM("Simul time " << simulationTime.count() << " [microsec]");
 }
 
 
@@ -89,7 +83,7 @@ void UavVis::checkRegisteredTargets(const gazebo_msgs::ModelStates::ConstPtr& mo
         if( m_targets.find(model) != m_targets.end() ) { continue; }
 
         ROS_INFO_STREAM("New target \"" << model << "\" was founded.");
-        m_targets.emplace( model, new Model(model) );
+        m_targets.emplace( model, new Target(model) );
     }
 }
 

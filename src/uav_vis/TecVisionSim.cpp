@@ -49,7 +49,7 @@ inline bool TecVisionSim::isTargetInCam(const UavCoordinates& uavCoord,
     const auto heightDiff = uavHeight - targetHeight;
     if(heightDiff < 0) { 
         ROS_ERROR_STREAM("UAV height is lesser than target");
-        ROS_ERROR_STREAM(" UAV height: " << uavHeight << " Target height: " << targetHeight);
+        ROS_ERROR_STREAM("UAV height: " << uavHeight << " Target height: " << targetHeight);
         return false;
     }
 

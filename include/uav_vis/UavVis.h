@@ -9,7 +9,7 @@
 #include <gazebo_msgs/ModelStates.h>
 
 #include "uav_vis/SubMonitor.h"
-#include "uav_vis/Model.h"
+#include "uav_vis/Target.h"
 #include "uav_vis/CameraHandle.h"
 
 
