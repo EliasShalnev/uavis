@@ -1,6 +1,8 @@
 # uavis
 This package defines UAV technical vision system simulation. Each scout model with vision system suppose to launch this node. Node should be executed with namespace /scout$(number).
 ## Node arguments
+\--uavModel - monitored model name 
+
 \--port - camera gstreamer port
 
 \--frameProcessingTime - frame processing time (in seconds)
